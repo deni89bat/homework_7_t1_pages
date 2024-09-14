@@ -33,7 +33,18 @@ subprojects {
         useJUnitPlatform()
     }
 
-    tasks.register('smokeTest', Test) {
+//-только тесты из модуля «api-tests»
+    tasks.register('runApiTests') {
+        dependsOn ':api-tests:test'
+    }
+
+//-только тесты из модуля «ui-tests»
+    tasks.register('runUiTests') {
+        dependsOn ':ui-tests:test'
+    }
+
+//-только Smoke-тесты обоих модулей (по тэгу «smoke»)
+    tasks.register('runSmokeTests', Test) {
         useJUnitPlatform {
             includeTags 'smoke'
         }
