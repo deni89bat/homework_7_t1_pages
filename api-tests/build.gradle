@@ -1,0 +1,11 @@
+//api-tests
+dependencies {
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+    testImplementation "io.qameta.allure:allure-rest-assured:${allureRestAssuredVersion}"
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+}
+
+
+
+
+

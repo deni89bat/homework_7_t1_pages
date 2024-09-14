@@ -1,0 +1,10 @@
+// ui-tests
+dependencies {
+    implementation project(":api-tests")
+    testImplementation "org.testcontainers:selenium:${testcontainersSeleniumVersion}"
+    testImplementation "com.codeborne:selenide:${selenideVersion}"
+    testImplementation "io.qameta.allure:allure-selenide:${allureSelenideVersion}"
+}
+
+
+
