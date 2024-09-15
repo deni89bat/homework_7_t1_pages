@@ -1,3 +1,5 @@
+package tests;
+
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.BeforeAll;
