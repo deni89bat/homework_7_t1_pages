@@ -4,9 +4,11 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -33,10 +35,16 @@ public class HomeWorkTests {
     }
 
     @Test
+    @DisplayName("Checkboxes")
+    @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
     public void checkboxesTest() {
         SelenideElement checkboxesButton = $x("//a[@href='/checkboxes']");
+        SelenideElement checkbox1 = $x("//form[@id='checkboxes']/input[1]");
+        SelenideElement checkbox2 = $x("//form[@id='checkboxes']/input[2]");
+
         clickLink(checkboxesButton);
-        setCheckbox();
+        setCheckbox(checkbox1, checkbox2);
+        printCheckedStatus(checkbox1, checkbox2);
     }
 
     @Step("1. Перейти на страницу {buttonName}")
@@ -45,15 +53,24 @@ public class HomeWorkTests {
     }
 
     @Step("2. Выделить первый чекбокс, снять выделение со второго чекбокса.")
-    private void setCheckbox() {
-        SelenideElement checkbox1 = $x("//form[@id='checkboxes']/input[1]");
-        SelenideElement checkbox2 = $x("//form[@id='checkboxes']/input[2]");
-
+    private void setCheckbox(SelenideElement checkbox1, SelenideElement checkbox2) {
         checkbox1.click();
         checkbox2.click();
     }
 
-    //  скриншот к отчету Allure
+    @Step("3. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
+    private void printCheckedStatus(SelenideElement checkbox1, SelenideElement checkbox2) {
+        // Проверка состояния чекбоксов и вывод в консоль
+        boolean isChecked1 = checkbox1.isSelected();
+        boolean isChecked2 = checkbox2.isSelected();
+
+        System.out.println("Checkbox 1 выделен: " + isChecked1);
+        System.out.println("Checkbox 2 выделен: " + isChecked2);
+    }
+
+
+
+    // Метод для добавления скриншота в отчет Allure
     @AfterEach
     public void attachScreenshot() {
         File screenshotFile = Screenshots.takeScreenShotAsFile();
