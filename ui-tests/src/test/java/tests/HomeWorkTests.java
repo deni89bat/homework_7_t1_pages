@@ -6,10 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.ByteArrayInputStream;
@@ -17,8 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
 
 public class HomeWorkTests {
@@ -31,8 +27,13 @@ public class HomeWorkTests {
         // Настройка конфигурации Selenide
         Configuration.browser = "chrome";
         Configuration.pageLoadStrategy = "eager";
+    }
+
+    @BeforeEach
+    void openBaseUrl() {
         open("https://the-internet.herokuapp.com/");
     }
+
 
     @Test
     @DisplayName("Checkboxes")
@@ -42,15 +43,16 @@ public class HomeWorkTests {
         SelenideElement checkbox1 = $x("//form[@id='checkboxes']/input[1]");
         SelenideElement checkbox2 = $x("//form[@id='checkboxes']/input[2]");
 
-        clickLink(checkboxesButton);
+        clickLink(checkboxesButton, checkboxesButton.getText());
         setCheckbox(checkbox1, checkbox2);
         printCheckedStatus(checkbox1, checkbox2);
     }
 
     @Step("1. Перейти на страницу {buttonName}")
-    public void clickLink(SelenideElement buttonName) {
-        buttonName.click();
+    public void clickLink(SelenideElement buttonElement, String buttonName) {
+        buttonElement.click();  // Кликаем по кнопке
     }
+
 
     @Step("2. Выделить первый чекбокс, снять выделение со второго чекбокса.")
     private void setCheckbox(SelenideElement checkbox1, SelenideElement checkbox2) {
@@ -68,17 +70,42 @@ public class HomeWorkTests {
         System.out.println("Checkbox 2 выделен: " + isChecked2);
     }
 
+    @Test
+    @DisplayName("Dropdown")
+    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.")
+    public void dropdownTest() {
+        SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
+        SelenideElement dropdownElement = $x("//select[@id='dropdown']");
+        clickLink(dropdownButton, dropdownButton.getText());
+        selectOption(dropdownElement, 1);
+        selectOption(dropdownElement, 2);
+    }
+
+    @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
+    private void selectOption(SelenideElement dropdownElement, int optionNumber) {
+        dropdownElement.selectOption(optionNumber);
+        System.out.println("В выпадающем списке выбрана опция: " + dropdownElement.getText());
+    }
 
 
     // Метод для добавления скриншота в отчет Allure
-    @AfterEach
     public void attachScreenshot() {
         File screenshotFile = Screenshots.takeScreenShotAsFile();
-        try {
-            byte[] screenshotBytes = Files.readAllBytes(screenshotFile.toPath());
-            addAttachment("Screenshot", "image/png", new ByteArrayInputStream(screenshotBytes), "png");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (screenshotFile != null) {
+            try {
+                byte[] screenshotBytes = Files.readAllBytes(screenshotFile.toPath());
+                addAttachment("Финальный скриншот", "image/png", new ByteArrayInputStream(screenshotBytes), "png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Скриншот не был создан, так как screenshotFile равен null.");
         }
+    }
+
+    @AfterEach
+    void teardown() {
+        attachScreenshot();
+        closeWebDriver();
     }
 }
