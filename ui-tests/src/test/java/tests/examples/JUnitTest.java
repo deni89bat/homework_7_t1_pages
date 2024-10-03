@@ -1,7 +1,8 @@
-package tests;
+package tests.examples;
 
 import org.junit.jupiter.api.*;
 
+@Disabled
 public class JUnitTest {
     @BeforeAll
     static void beforeAll() {

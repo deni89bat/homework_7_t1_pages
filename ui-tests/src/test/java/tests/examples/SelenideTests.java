@@ -1,12 +1,14 @@
-package tests;
+package tests.examples;
 
 import com.codeborne.selenide.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.*;
 
+@Disabled
 public class SelenideTests {
     SelenideElement infiniteScrollBtn = $x("//a[@href='/infinite_scroll']");
     SelenideElement pageTitle = $x("//h3");
