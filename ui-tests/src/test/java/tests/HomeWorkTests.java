@@ -154,7 +154,7 @@ public class HomeWorkTests {
     }
 
     @Step("Перейти на страницу {buttonName}")
-    public void clickLink(SelenideElement buttonElement, String buttonName) {
+    private void clickLink(SelenideElement buttonElement, String buttonName) {
         buttonElement.click();  // Кликаем по кнопке
     }
 
@@ -208,7 +208,7 @@ public class HomeWorkTests {
 
 
     @Step("Навести курсор на каждую картинку и вывести в консоль текст, который появляется при наведении.")
-    public void hoverOverImagesAndPrintText() {
+    private void hoverOverImagesAndPrintText() {
         ElementsCollection images = $$x("//div[@class='figure']");
 
         for (int i = 0; i < images.size(); i++) {
