@@ -91,10 +91,66 @@ public class HomeWorkTests {
     @Test
     @DisplayName("Notification Message")
     @Description("Перейти на страницу Notification Message. Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
-    public void testNotificationMessage() {
+    public void notificationMessageTest() {
         SelenideElement notificationMessageButton = $x("//a[@href='/notification_message']");
         clickLink(notificationMessageButton, notificationMessageButton.getText());
         clickUntilSuccessNotification();
+    }
+
+    @Test
+    @DisplayName("Add/Remove Elements")
+    @Description("Перейти на страницу Add/Remove Elements. Нажать на кнопку Add Element 5 раз. С каждым нажатием выводить в консоль текст появившегося элемента. Нажать на разные кнопки Delete три раза. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
+    public void addRemoveElementsTest() {
+        SelenideElement addRemoveElementsButton = $x("//a[@href='/add_remove_elements/']");
+        clickLink(addRemoveElementsButton, addRemoveElementsButton.getText());
+        addElements(5);
+        deleteElements(3);
+    }
+
+    @Test
+    @DisplayName("Status Code 200")
+    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
+    public void statusCode200Test() {
+        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
+        clickLink(statusCodesButton, statusCodesButton.getText());
+        clickStatusAndPrintText("200");
+    }
+
+    @Test
+    @DisplayName("Status Code 301")
+    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
+    public void statusCode301Test() {
+        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
+        clickLink(statusCodesButton, statusCodesButton.getText());
+        clickStatusAndPrintText("301");
+    }
+
+    @Test
+    @DisplayName("Status Code 404")
+    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
+    public void statusCode404Test() {
+        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
+        clickLink(statusCodesButton, statusCodesButton.getText());
+        clickStatusAndPrintText("404");
+    }
+
+    @Test
+    @DisplayName("Status Code 500")
+    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
+    public void statusCode500Test() {
+        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
+        clickLink(statusCodesButton, statusCodesButton.getText());
+        clickStatusAndPrintText("500");
+    }
+
+    @Step("Кликнуть на статус {status} и вывести текст страницы статуса.")
+    private void clickStatusAndPrintText(String status) {
+        SelenideElement statusLink = $x("//a[contains(text(), '" + status + "')]");
+        statusLink.click();
+
+        String pageText = $x("//div[@class='example']/p").getText();
+        String statusMessage = pageText.split("\\.<br>")[0];
+        System.out.println("Текст страницы статуса (" + status + "): \n" + statusMessage);
     }
 
     @Step("1. Перейти на страницу {buttonName}")
@@ -194,6 +250,41 @@ public class HomeWorkTests {
     private void closeNotification(SelenideElement notificationMessage) {
         SelenideElement closeButton = notificationMessage.$x(".//a[contains(@class,'close')]");
         closeButton.click();
+    }
+
+    @Step("Нажать на кнопку Add Element {0} раз. С каждым нажатием выводить в консоль текст появившегося элемента.")
+    private void addElements(int count) {
+        SelenideElement addButton = $x("//button[text()='Add Element']");
+
+        for (int i = 1; i <= count; i++) {
+            addButton.click();
+            System.out.println("Добавлен элемент с текстом: " + getLastAddedElement().getText());
+        }
+    }
+
+    @Step("Получить последний добавленный элемент.")
+    private SelenideElement getLastAddedElement() {
+        return $$x("//button[text()='Delete']").last();
+    }
+
+    @Step("Нажать на кнопки Delete {0} раз. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
+    private void deleteElements(int count) {
+        for (int i = 1; i <= count; i++) {
+            SelenideElement deleteButton = $$x("//button[text()='Delete']").first();
+            deleteButton.click();
+            System.out.println("Удалена кнопка Delete №" + i);
+            printDeleteButtons();
+        }
+    }
+
+    @Step("Вывести в консоль оставшееся количество кнопок Delete и их тексты.")
+    private void printDeleteButtons() {
+        ElementsCollection deleteButtons = $$x("//button[text()='Delete']");
+        System.out.println("Оставшееся количество кнопок Delete: " + deleteButtons.size());
+
+        for (int j = 0; j < deleteButtons.size(); j++) {
+            System.out.println("Текст кнопки №" + (j + 1) + ": " + deleteButtons.get(j).getText());
+        }
     }
 
     // Метод для добавления скриншота в отчет Allure
