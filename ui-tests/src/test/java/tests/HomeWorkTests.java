@@ -1,6 +1,7 @@
 package tests;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
@@ -70,13 +71,23 @@ public class HomeWorkTests {
 
     @Test
     @DisplayName("Inputs")
-    @Step("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
+    @Description("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
     public void inputsTest() {
         SelenideElement inputsButton = $x("//a[@href='/inputs']");
         SelenideElement inputField = $x("//input");
         clickLink(inputsButton, inputsButton.getText());
         enterRandomNumberInInput(inputField);
     }
+
+    @Test
+    @DisplayName("Hover")
+    @Description("Перейти на страницу Hovers. Навести курсор на каждую картинку. Вывести в консоль текст, который появляется при наведении.")
+    public void hoverTest() {
+        SelenideElement hoversButton = $x("//a[@href='/hovers']");
+        clickLink(hoversButton, hoversButton.getText());
+        hoverOverImagesAndPrintText();
+    }
+
 
     @Step("1. Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
@@ -130,6 +141,25 @@ public class HomeWorkTests {
         int randomNumber = (int) (Math.random() * 10000) + 1;
         inputField.setValue(String.valueOf(randomNumber));
         System.out.println("Значение элемента Input: " + inputField.getValue());
+    }
+
+
+    @Step("Навести курсор на каждую картинку и вывести в консоль текст, который появляется при наведении.")
+    public void hoverOverImagesAndPrintText() {
+        ElementsCollection images = $$x("//div[@class='figure']");
+
+        for (int i = 0; i < images.size(); i++) {
+            hoverOnImageAndPrintText(images.get(i), i + 1);
+        }
+    }
+
+    @Step("Навести курсор на картинку {imageNumber} и вывести текст.")
+    private void hoverOnImageAndPrintText(SelenideElement image, int imageNumber) {
+        image.hover();  // Наводим курсор на изображение
+
+        // Захватываем текст, который появляется при наведении
+        SelenideElement caption = image.$x(".//div[@class='figcaption']");
+        System.out.println("Текст, появившийся при наведении на изображение " + imageNumber + ":  \n" + caption.getText());
     }
 
     // Метод для добавления скриншота в отчет Allure
