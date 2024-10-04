@@ -74,9 +74,10 @@ public class HomeWorkTests {
         selectOption(dropdownElement, 2);
     }
 
-    @Test
+    @RepeatedTest(failureThreshold = 5, value = 10,  name = "Запуск {currentRepetition} из {totalRepetitions}" )
     @DisplayName("Disappearing Elements")
-    @Description("Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.")
+    @Description("Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой." +
+            "Для каждого обновления страницы проверять наличие 5 элементов. Использовать @RepeatedTest")
     public void disappearingElementsTest() {
         SelenideElement disappearingElementsButton = $x("//a[@href='/disappearing_elements']");
         clickLink(disappearingElementsButton, disappearingElementsButton.getText());
@@ -169,7 +170,7 @@ public class HomeWorkTests {
 
     @Step("Перейти на страницу {buttonName}")
     private void clickLink(SelenideElement buttonElement, String buttonName) {
-        buttonElement.click();  // Кликаем по кнопке
+        buttonElement.click();
     }
 
     @Step("Кликнуть на чекбокс и проверить его состояние.")
@@ -189,7 +190,8 @@ public class HomeWorkTests {
         System.out.println("Значение атрибута checked для " + checkboxName + ": " + checkbox.getAttribute("checked"));
     }
 
-    @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
+    @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown. " +
+            "Проверка корректного состояние каждого dropDown после каждого нажатия на него. ")
     private void selectOption(SelenideElement dropdownElement, int optionNumber) {
         dropdownElement.selectOption(optionNumber);
         String selectedText = dropdownElement.getText();
@@ -198,26 +200,25 @@ public class HomeWorkTests {
         dropdownElement.shouldHave(text(selectedText));
     }
 
-    //dropdownElement.should(Condition.)
-    @Step("Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.")
+    @Step("Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой. " +
+            "Для каждого обновления страницы проверяем наличие 5 элементов.")
     private void check5Elements() {
         int numberOfAttempts = 10;
-        boolean fiveElementsFound = false;
 
         for (int i = 1; i <= numberOfAttempts; i++) {
-            int countOfElements = $$x("//li/a").size();
+            ElementsCollection disappearingElementsList = $$x("//li/a");
 
-            if (countOfElements == 5) {
-                fiveElementsFound = true;
+            if (disappearingElementsList.size() == 5) {
                 System.out.println("Найдено 5 элементов на попытке №" + (i));
+                disappearingElementsList.should(CollectionCondition.size(5));
                 break;
             }
+
+            System.out.println("Количество обновлений - " + i);
             refresh();
         }
-        if (!fiveElementsFound) {
-            throw new AssertionError("Не удалось найти 5 элементов за 10 попыток");
-        }
     }
+
 
     @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
     private void enterRandomNumberInInput(SelenideElement inputField) {
