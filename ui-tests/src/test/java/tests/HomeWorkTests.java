@@ -68,6 +68,16 @@ public class HomeWorkTests {
         check5Elements();
     }
 
+    @Test
+    @DisplayName("Inputs")
+    @Step("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
+    public void inputsTest() {
+        SelenideElement inputsButton = $x("//a[@href='/inputs']");
+        SelenideElement inputField = $x("//input");
+        clickLink(inputsButton, inputsButton.getText());
+        enterRandomNumberInInput(inputField);
+    }
+
     @Step("1. Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
         buttonElement.click();  // Кликаем по кнопке
@@ -113,6 +123,13 @@ public class HomeWorkTests {
         if (!fiveElementsFound) {
             throw new AssertionError("Не удалось найти 5 элементов за 10 попыток");
         }
+    }
+
+    @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
+    private void enterRandomNumberInInput(SelenideElement inputField) {
+        int randomNumber = (int) (Math.random() * 10000) + 1;
+        inputField.setValue(String.valueOf(randomNumber));
+        System.out.println("Значение элемента Input: " + inputField.getValue());
     }
 
     // Метод для добавления скриншота в отчет Allure
