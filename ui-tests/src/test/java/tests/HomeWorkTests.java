@@ -88,6 +88,14 @@ public class HomeWorkTests {
         hoverOverImagesAndPrintText();
     }
 
+    @Test
+    @DisplayName("Notification Message")
+    @Description("Перейти на страницу Notification Message. Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
+    public void testNotificationMessage() {
+        SelenideElement notificationMessageButton = $x("//a[@href='/notification_message']");
+        clickLink(notificationMessageButton, notificationMessageButton.getText());
+        clickUntilSuccessNotification();
+    }
 
     @Step("1. Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
@@ -160,6 +168,32 @@ public class HomeWorkTests {
         // Захватываем текст, который появляется при наведении
         SelenideElement caption = image.$x(".//div[@class='figcaption']");
         System.out.println("Текст, появившийся при наведении на изображение " + imageNumber + ":  \n" + caption.getText());
+    }
+
+    @Step("Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
+    private void clickUntilSuccessNotification() {
+        SelenideElement clickHereButton = $x("//a[text()='Click here']");
+        SelenideElement notificationMessage = $x("//div[@id='flash']");
+        String expectedMessage = "Action successful";
+
+        boolean isSuccess = false;
+        while (!isSuccess) {
+            clickHereButton.click();
+            String messageText = notificationMessage.getText().trim();
+            if (messageText.contains(expectedMessage)) {
+                isSuccess = true;
+                System.out.println("Уведомление успешно: " + messageText);
+            } else {
+                System.out.println("Уведомление: " + messageText);
+                closeNotification(notificationMessage);
+            }
+        }
+    }
+
+    @Step("Закрыть всплывающее уведомление.")
+    private void closeNotification(SelenideElement notificationMessage) {
+        SelenideElement closeButton = notificationMessage.$x(".//a[contains(@class,'close')]");
+        closeButton.click();
     }
 
     // Метод для добавления скриншота в отчет Allure
