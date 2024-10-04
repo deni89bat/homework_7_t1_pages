@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
@@ -25,7 +26,6 @@ public class HomeWorkTests {
 
     @BeforeAll
     public static void setup() {
-        // Настройка конфигурации Selenide
         Configuration.browser = "chrome";
         Configuration.pageLoadStrategy = "eager";
     }
@@ -149,24 +149,23 @@ public class HomeWorkTests {
         statusLink.click();
 
         String pageText = $x("//div[@class='example']/p").getText();
-        String statusMessage = pageText.split("\\.<br>")[0];
+        String statusMessage = pageText.split("For a definition")[0].trim();
         System.out.println("Текст страницы статуса (" + status + "): \n" + statusMessage);
     }
 
-    @Step("1. Перейти на страницу {buttonName}")
+    @Step("Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
         buttonElement.click();  // Кликаем по кнопке
     }
 
-    @Step("2. Выделить первый чекбокс, снять выделение со второго чекбокса.")
+    @Step("Выделить первый чекбокс, снять выделение со второго чекбокса.")
     private void setCheckbox(SelenideElement checkbox1, SelenideElement checkbox2) {
         checkbox1.click();
         checkbox2.click();
     }
 
-    @Step("3. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
+    @Step("Вывести в консоль состояние атрибута checked для каждого чекбокса.")
     private void printCheckedStatus(SelenideElement checkbox1, SelenideElement checkbox2) {
-        // Проверка состояния чекбоксов и вывод в консоль
         boolean isChecked1 = checkbox1.isSelected();
         boolean isChecked2 = checkbox2.isSelected();
 
@@ -267,12 +266,19 @@ public class HomeWorkTests {
         return $$x("//button[text()='Delete']").last();
     }
 
-    @Step("Нажать на кнопки Delete {0} раз. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
+    @Step("Нажать на случайные кнопки Delete {0} раз. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
     private void deleteElements(int count) {
+        Random random = new Random();
+
         for (int i = 1; i <= count; i++) {
-            SelenideElement deleteButton = $$x("//button[text()='Delete']").first();
-            deleteButton.click();
-            System.out.println("Удалена кнопка Delete №" + i);
+            ElementsCollection elementsCollection = $$x("//button[text()='Delete']");
+            if (elementsCollection.isEmpty()) {
+                System.out.println("Нет больше кнопок Delete для удаления.");
+                break;
+            }
+            int randomIndex = random.nextInt(elementsCollection.size());
+            elementsCollection.get(randomIndex).click();
+            System.out.println("Удалена случайная кнопка Delete №" + (randomIndex + 1));
             printDeleteButtons();
         }
     }
