@@ -34,7 +34,6 @@ public class HomeWorkTests {
         open("https://the-internet.herokuapp.com/");
     }
 
-
     @Test
     @DisplayName("Checkboxes")
     @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
@@ -48,11 +47,31 @@ public class HomeWorkTests {
         printCheckedStatus(checkbox1, checkbox2);
     }
 
+    @Test
+    @DisplayName("Dropdown")
+    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.")
+    public void dropdownTest() {
+        SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
+        SelenideElement dropdownElement = $x("//select[@id='dropdown']");
+
+        clickLink(dropdownButton, dropdownButton.getText());
+        selectOption(dropdownElement, 1);
+        selectOption(dropdownElement, 2);
+    }
+
+    @Test
+    @DisplayName("Disappearing Elements")
+    @Description("Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.")
+    public void disappearingElementsTest() {
+        SelenideElement disappearingElementsButton = $x("//a[@href='/disappearing_elements']");
+        clickLink(disappearingElementsButton, disappearingElementsButton.getText());
+        check5Elements();
+    }
+
     @Step("1. Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
         buttonElement.click();  // Кликаем по кнопке
     }
-
 
     @Step("2. Выделить первый чекбокс, снять выделение со второго чекбокса.")
     private void setCheckbox(SelenideElement checkbox1, SelenideElement checkbox2) {
@@ -70,23 +89,31 @@ public class HomeWorkTests {
         System.out.println("Checkbox 2 выделен: " + isChecked2);
     }
 
-    @Test
-    @DisplayName("Dropdown")
-    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.")
-    public void dropdownTest() {
-        SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
-        SelenideElement dropdownElement = $x("//select[@id='dropdown']");
-        clickLink(dropdownButton, dropdownButton.getText());
-        selectOption(dropdownElement, 1);
-        selectOption(dropdownElement, 2);
-    }
-
     @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
     private void selectOption(SelenideElement dropdownElement, int optionNumber) {
         dropdownElement.selectOption(optionNumber);
         System.out.println("В выпадающем списке выбрана опция: " + dropdownElement.getText());
     }
 
+    @Step("Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.")
+    private void check5Elements() {
+        int numberOfAttempts = 10;
+        boolean fiveElementsFound = false;
+
+        for (int i = 1; i <= numberOfAttempts; i++) {
+            int countOfElements = $$x("//li/a").size();
+
+            if (countOfElements == 5) {
+                fiveElementsFound = true;
+                System.out.println("Найдено 5 элементов на попытке №" + (i));
+                break;
+            }
+            refresh();
+        }
+        if (!fiveElementsFound) {
+            throw new AssertionError("Не удалось найти 5 элементов за 10 попыток");
+        }
+    }
 
     // Метод для добавления скриншота в отчет Allure
     public void attachScreenshot() {
