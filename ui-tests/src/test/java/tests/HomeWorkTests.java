@@ -1,14 +1,13 @@
 package tests;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Screenshots;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,17 +35,28 @@ public class HomeWorkTests {
         open("https://the-internet.herokuapp.com/");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"ascOrder", "descOrder"})
     @DisplayName("Checkboxes")
     @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
-    public void checkboxesTest() {
+    public void checkboxesTest(String order) {
+
         SelenideElement checkboxesButton = $x("//a[@href='/checkboxes']");
         SelenideElement checkbox1 = $x("//form[@id='checkboxes']/input[1]");
         SelenideElement checkbox2 = $x("//form[@id='checkboxes']/input[2]");
 
         clickLink(checkboxesButton, checkboxesButton.getText());
-        setCheckbox(checkbox1, checkbox2);
-        printCheckedStatus(checkbox1, checkbox2);
+
+        if (Objects.equals(order, "ascOrder")) {
+            setCheckboxWithVerification(checkbox1);
+            setCheckboxWithVerification(checkbox2);
+        } else {
+            setCheckboxWithVerification(checkbox2);
+            setCheckboxWithVerification(checkbox1);
+        }
+
+        printCheckedAttribute(checkbox1, "checkbox 1");
+        printCheckedAttribute(checkbox2, "checkbox 2");
     }
 
     @Test
@@ -159,28 +169,21 @@ public class HomeWorkTests {
         buttonElement.click();  // Кликаем по кнопке
     }
 
-    @Step("Выделить первый чекбокс, снять выделение со второго чекбокса.")
-    private void setCheckbox(SelenideElement checkbox1, SelenideElement checkbox2) {
-        checkbox1.click();
-        checkbox2.click();
+    @Step("Кликнуть на чекбокс и проверить его состояние.")
+    private void setCheckboxWithVerification(SelenideElement checkbox) {
+        boolean isCheckedBeforeClick = checkbox.isSelected();
+
+        checkbox.click();
+        if (isCheckedBeforeClick) {
+            checkbox.shouldNotBe(Condition.checked);
+        } else {
+            checkbox.shouldBe(Condition.checked);
+        }
     }
 
-    @Step("Вывести в консоль состояние атрибута checked для каждого чекбокса.")
-    private void printCheckedStatus(SelenideElement checkbox1, SelenideElement checkbox2) {
-        String isChecked1 = checkbox1.getAttribute("checked");
-        String isChecked2 = checkbox2.getAttribute("checked");
-
-        if (Objects.equals(isChecked1, "true")) {
-            System.out.println("Checkbox 1 выделен: " + isChecked1);
-        } else {
-            System.out.println("Checkbox 1 не выделен");
-        }
-
-        if (Objects.equals(isChecked2, "true")) {
-            System.out.println("Checkbox 2 выделен: " + isChecked2);
-        } else {
-            System.out.println("Checkbox 2 не выделен");
-        }
+    @Step("Вывести в консоль значение атрибута checked для {checkboxName}.")
+    private void printCheckedAttribute(SelenideElement checkbox, String checkboxName) {
+        System.out.println("Значение атрибута checked для " + checkboxName + ": " + checkbox.getAttribute("checked"));
     }
 
     @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
