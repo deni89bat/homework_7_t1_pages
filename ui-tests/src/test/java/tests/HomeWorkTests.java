@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Objects;
 import java.util.Random;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -166,11 +167,20 @@ public class HomeWorkTests {
 
     @Step("Вывести в консоль состояние атрибута checked для каждого чекбокса.")
     private void printCheckedStatus(SelenideElement checkbox1, SelenideElement checkbox2) {
-        boolean isChecked1 = checkbox1.isSelected();
-        boolean isChecked2 = checkbox2.isSelected();
+        String isChecked1 = checkbox1.getAttribute("checked");
+        String isChecked2 = checkbox2.getAttribute("checked");
 
-        System.out.println("Checkbox 1 выделен: " + isChecked1);
-        System.out.println("Checkbox 2 выделен: " + isChecked2);
+        if (Objects.equals(isChecked1, "true")) {
+            System.out.println("Checkbox 1 выделен: " + isChecked1);
+        } else {
+            System.out.println("Checkbox 1 не выделен");
+        }
+
+        if (Objects.equals(isChecked2, "true")) {
+            System.out.println("Checkbox 2 выделен: " + isChecked2);
+        } else {
+            System.out.println("Checkbox 2 не выделен");
+        }
     }
 
     @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
@@ -202,7 +212,7 @@ public class HomeWorkTests {
     @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
     private void enterRandomNumberInInput(SelenideElement inputField) {
         int randomNumber = (int) (Math.random() * 10000) + 1;
-        inputField.setValue(String.valueOf(randomNumber));
+        inputField.sendKeys(String.valueOf(randomNumber));
         System.out.println("Значение элемента Input: " + inputField.getValue());
     }
 
