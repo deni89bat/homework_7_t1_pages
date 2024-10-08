@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
 
@@ -38,7 +39,8 @@ public class HomeWorkTests {
     @ParameterizedTest
     @ValueSource(strings = {"ascOrder", "descOrder"})
     @DisplayName("Checkboxes")
-    @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль состояние атрибута checked для каждого чекбокса.")
+    @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль значение атрибута checked для каждого чекбокса." +
+            "Проверять корректное состояние каждого чекбокса после каждого нажатия на него. Запустить тест с помощью @ParametrizedTest, изменяя порядок нажатия на чекбоксы с помощью одного параметра.")
     public void checkboxesTest(String order) {
 
         SelenideElement checkboxesButton = $x("//a[@href='/checkboxes']");
@@ -61,7 +63,8 @@ public class HomeWorkTests {
 
     @Test
     @DisplayName("Dropdown")
-    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.")
+    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown." +
+            "Проверять корректное состояние каждого dropDown после каждого нажатия на него. ")
     public void dropdownTest() {
         SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
         SelenideElement dropdownElement = $x("//select[@id='dropdown']");
@@ -189,9 +192,13 @@ public class HomeWorkTests {
     @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown")
     private void selectOption(SelenideElement dropdownElement, int optionNumber) {
         dropdownElement.selectOption(optionNumber);
-        System.out.println("В выпадающем списке выбрана опция: " + dropdownElement.getText());
+        String selectedText = dropdownElement.getText();
+        System.out.println("В выпадающем списке выбрана опция: " + selectedText);
+
+        dropdownElement.shouldHave(text(selectedText));
     }
 
+    //dropdownElement.should(Condition.)
     @Step("Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.")
     private void check5Elements() {
         int numberOfAttempts = 10;
