@@ -22,6 +22,7 @@ import java.util.Random;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class HomeWorkTests {
     // Регистрация расширения для создания скриншотов
@@ -169,14 +170,37 @@ public class HomeWorkTests {
         checkNotification();
     }
 
-    @Test
+    @TestFactory
     @DisplayName("Add/Remove Elements")
-    @Description("Перейти на страницу Add/Remove Elements. Нажать на кнопку Add Element 5 раз. С каждым нажатием выводить в консоль текст появившегося элемента. Нажать на разные кнопки Delete три раза. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
-    public void addRemoveElementsTest() {
-        SelenideElement addRemoveElementsButton = $x("//a[@href='/add_remove_elements/']");
-        clickLink(addRemoveElementsButton, addRemoveElementsButton.getText());
-        addElements(5);
-        deleteElements(3);
+    @Description("""
+            Перейти на страницу Add/Remove Elements.
+            Создать 2/5/1 кнопки Delete.
+            С каждым нажатием выводить в консоль текст появившегося элемента.
+            Удалить 1/2/3 кнопки Delete.
+            Выводить в консоль оставшееся количество кнопок Delete и их тексты.
+            Добавить проверки в задание Add/Remove Elements.
+            Проверять, что на каждом шагу остается видимым ожидаемое количество элементов.
+            Запустить тест три раза, используя @TestFactory, меняя количество созданий и удалений на 2:1, 5:2, 1:3 соответственно.
+            """)
+    List<DynamicTest> addRemoveElementsFactoryTest() {
+        List<DynamicTest> tests = new ArrayList<>();
+        // Добавляем три теста с различными соотношениями добавлений/удалений
+        tests.add(createTestForFactory(2, 1));
+        tests.add(createTestForFactory(5, 2));
+        tests.add(createTestForFactory(1, 3));
+        return tests;
+    }
+
+    private DynamicTest createTestForFactory(int addCount, int deleteCount) {
+        return DynamicTest.dynamicTest("Создаём: " + addCount + " , удаляем: " + deleteCount,
+                () -> {
+                    openBaseUrl();
+                    SelenideElement addRemoveElementsButton = $x("//a[@href='/add_remove_elements/']");
+                    clickLink(addRemoveElementsButton, addRemoveElementsButton.getText());
+                    addElement(addCount);
+                    deleteElements(deleteCount);
+                }
+        );
     }
 
     @Test
@@ -353,18 +377,33 @@ public class HomeWorkTests {
         return $$x("//button[text()='Delete']").last();
     }
 
+    @Step("Нажать на  кнопку Add Element {0} раз. Выводить в консоль количество добавленных кнопок их тексты.")
+    private void addElement(int count) {
+        for (int i = 1; i <= count; i++) {
+            $x("//button[text()='Add Element']").click();
+            System.out.println("Добавлен элемент №" + i);
+            ElementsCollection deleteButtons = $$x("//button[text()='Delete']");
+            deleteButtons.should(CollectionCondition.size(i));
+            SelenideElement addedElement = getLastAddedElement();
+            System.out.println("Текст добавленного элемента: " + addedElement.getText());
+        }
+    }
+
     @Step("Нажать на случайные кнопки Delete {0} раз. Выводить в консоль оставшееся количество кнопок Delete и их тексты.")
     private void deleteElements(int count) {
         Random random = new Random();
 
         for (int i = 1; i <= count; i++) {
             ElementsCollection elementsCollection = $$x("//button[text()='Delete']");
+            int countOfDeleteButtons = elementsCollection.size();
             if (elementsCollection.isEmpty()) {
                 System.out.println("Нет больше кнопок Delete для удаления.");
-                break;
+                fail("Недостаточно кнопок для удаления. Ожидалось: " + (count - i + 1) + ", но доступно: " + elementsCollection.size());
             }
             int randomIndex = random.nextInt(elementsCollection.size());
             elementsCollection.get(randomIndex).click();
+            //Проверка, что кнопка удалилась и осталось ожидаемые кол-во кнопок
+            elementsCollection.should(CollectionCondition.size(countOfDeleteButtons - 1));
             System.out.println("Удалена случайная кнопка Delete №" + (randomIndex + 1));
             printDeleteButtons();
         }
