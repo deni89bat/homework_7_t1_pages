@@ -22,7 +22,6 @@ import java.util.Random;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
-import static org.junit.Assert.assertEquals;
 
 public class HomeWorkTests {
     // Регистрация расширения для создания скриншотов
@@ -43,8 +42,9 @@ public class HomeWorkTests {
     @ParameterizedTest
     @ValueSource(strings = {"ascOrder", "descOrder"})
     @DisplayName("Checkboxes")
-    @Description("Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль значение атрибута checked для каждого чекбокса." +
-            "Проверять корректное состояние каждого чекбокса после каждого нажатия на него. Запустить тест с помощью @ParametrizedTest, изменяя порядок нажатия на чекбоксы с помощью одного параметра.")
+    @Description("""
+            Перейти на страницу Checkboxes. Выделить первый чекбокс, снять выделение со второго чекбокса. Вывести в консоль значение атрибута checked для каждого чекбокса.
+            Проверять корректное состояние каждого чекбокса после каждого нажатия на него. Запустить тест с помощью @ParametrizedTest, изменяя порядок нажатия на чекбоксы с помощью одного параметра.""")
     public void checkboxesTest(String order) {
 
         SelenideElement checkboxesButton = $x("//a[@href='/checkboxes']");
@@ -67,8 +67,9 @@ public class HomeWorkTests {
 
     @Test
     @DisplayName("Dropdown")
-    @Description("Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown." +
-            "Проверять корректное состояние каждого dropDown после каждого нажатия на него. ")
+    @Description("""
+            Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.
+            Проверять корректное состояние каждого dropDown после каждого нажатия на него.""")
     public void dropdownTest() {
         SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
         SelenideElement dropdownElement = $x("//select[@id='dropdown']");
@@ -80,8 +81,9 @@ public class HomeWorkTests {
 
     @RepeatedTest(failureThreshold = 5, value = 10, name = "Запуск {currentRepetition} из {totalRepetitions}")
     @DisplayName("Disappearing Elements")
-    @Description("Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой." +
-            "Для каждого обновления страницы проверять наличие 5 элементов. Использовать @RepeatedTest")
+    @Description("""
+            Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.
+            Для каждого обновления страницы проверять наличие 5 элементов. Использовать @RepeatedTest""")
     public void disappearingElementsTest() {
         SelenideElement disappearingElementsButton = $x("//a[@href='/disappearing_elements']");
         clickLink(disappearingElementsButton, disappearingElementsButton.getText());
@@ -90,10 +92,11 @@ public class HomeWorkTests {
 
     @TestFactory
     @DisplayName("Inputs")
-    @Description("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input." +
-            "Добавить проверки в задание Inputs из предыдущей лекции. Проверить, что в поле ввода отображается именно то число, которое было введено. " +
-            "Повторить тест 10 раз, используя @TestFactory, с разными значениями, вводимыми в поле ввода. " +
-            "Создать проверку негативных кейсов (попытка ввести в поле латинские буквы, спецсимволы, пробел до и после числа).")
+    @Description("""
+            Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.
+            Добавить проверки в задание Inputs из предыдущей лекции. Проверить, что в поле ввода отображается именно то число, которое было введено.
+            Повторить тест 10 раз, используя @TestFactory, с разными значениями, вводимыми в поле ввода.
+            Создать проверку негативных кейсов (попытка ввести в поле латинские буквы, спецсимволы, пробел до и после числа).""")
     List<DynamicTest> inputsTestFactoryTest() {
         List<DynamicTest> tests = new ArrayList<>();
         SelenideElement inputsButton = $x("//a[@href='/inputs']");
@@ -133,18 +136,6 @@ public class HomeWorkTests {
         return tests;
     }
 
-    @Step("Проверка ввода недопустимого значения: '{value}'")
-    private void checkInvalidInput(SelenideElement inputField, String value) {
-        String expectedValue = value.replaceAll("[^0-9]", "");
-        if (expectedValue.isEmpty()) {
-            // Если в строке нет цифр, поле должно быть пустым
-            inputField.shouldBe(Condition.empty);
-        } else {
-            inputField.shouldBe(Condition.value(expectedValue));
-        }
-
-    }
-
     @ParameterizedTest(name = "Проверка текста при наведении на картинку {0}")
     @CsvSource({
             "1, name: user1 View profile",
@@ -152,24 +143,30 @@ public class HomeWorkTests {
             "3, name: user3 View profile"
     })
     @DisplayName("Hover")
-    @Description("Перейти на страницу Hovers. Навести курсор на каждую картинку. Вывести в консоль текст, который появляется при наведении." +
-            "Добавить проверки в задание Hovers из предыдущей лекции.\n" +
-            "При каждом наведении курсора, проверить, что отображаемый текст совпадает с ожидаемым.\n" +
-            "Выполнить тест с помощью @ParametrizedTest, в каждом тесте, указывая на какой элемент наводить курсор")
+    @Description(""" 
+            Перейти на страницу Hovers. Навести курсор на каждую картинку. Вывести в консоль текст, который появляется при наведении.
+            Добавить проверки в задание Hovers из предыдущей лекции.
+            При каждом наведении курсора, проверить, что отображаемый текст совпадает с ожидаемым.
+            Выполнить тест с помощью @ParametrizedTest, в каждом тесте, указывая на какой элемент наводить курсор""")
     public void hoverTest(int imageIndex, String expectedText) {
         SelenideElement hoversButton = $x("//a[@href='/hovers']");
         clickLink(hoversButton, hoversButton.getText());
-        hoverOnImageAndPrintText(imageIndex, expectedText);
+        hoverOnImageAndCheckText(imageIndex, expectedText);
     }
 
-
-    @Test
+    @RepeatedTest(failureThreshold = 4, value = 10, name = "Запуск {currentRepetition} из {totalRepetitions}")
     @DisplayName("Notification Message")
-    @Description("Перейти на страницу Notification Message. Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
-    public void notificationMessageTest() {
+    @Description("""
+            Перейти на страницу Notification Message.
+            После каждого неудачного клика закрывать всплывающее уведомление.
+            Добавить проверки в задание Notification Message из предыдущей лекции.
+            Добавить проверку, что всплывающее уведомление должно быть Successfull.
+            Если нет – провалить тест.
+            Использовать @RepeatedTest.""")
+    public void notificationMessageRepeatedTest() {
         SelenideElement notificationMessageButton = $x("//a[@href='/notification_message']");
         clickLink(notificationMessageButton, notificationMessageButton.getText());
-        clickUntilSuccessNotification();
+        checkNotification();
     }
 
     @Test
@@ -289,8 +286,19 @@ public class HomeWorkTests {
         inputField.shouldBe(Condition.value(String.valueOf(randomNumber)));
     }
 
+    @Step("Проверка ввода недопустимого значения: '{value}'")
+    private void checkInvalidInput(SelenideElement inputField, String value) {
+        String expectedValue = value.replaceAll("[^0-9]", "");
+        if (expectedValue.isEmpty()) {
+            inputField.shouldBe(Condition.empty);
+        } else {
+            inputField.shouldBe(Condition.value(expectedValue));
+        }
+
+    }
+
     @Step("Навести курсор на картинку {0} и проверить текст")
-    private void hoverOnImageAndPrintText(int imageIndex, String expectedText) {
+    private void hoverOnImageAndCheckText(int imageIndex, String expectedText) {
         SelenideElement image = $x(String.format("//div[@class='figure'][%s]", imageIndex));
         sleep(200);
 
@@ -301,26 +309,26 @@ public class HomeWorkTests {
         caption.shouldBe(Condition.visible);
         caption.shouldHave(Condition.text(expectedText));
 
-        System.out.println("Текст, появившийся при наведении на изображение " + imageIndex  + ":  \n" + caption.getText());
+        System.out.println("Текст, появившийся при наведении на изображение " + imageIndex + ":  \n" + caption.getText());
     }
 
-    @Step("Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
-    private void clickUntilSuccessNotification() {
+    @Step("Проверяем, что всплывающее уведомление Successfull. " +
+            "Если нет - то закрываем всплывающее уведомление и кликаем кнопку Click Here, повторно проверяем всплывающее уведомление Successfull.")
+    private void checkNotification() {
         SelenideElement clickHereButton = $x("//a[text()='Click here']");
         SelenideElement notificationMessage = $x("//div[@id='flash']");
         String expectedMessage = "Action successful";
+        String messageText = notificationMessage.getText().trim();
 
-        boolean isSuccess = false;
-        while (!isSuccess) {
+        if (messageText.contains(expectedMessage)) {
+            System.out.println("Уведомление успешно: " + messageText);
+            notificationMessage.shouldHave(Condition.text(expectedMessage));
+        } else {
+            System.out.println("Уведомление не успешно: " + messageText);
+            closeNotification(notificationMessage);
             clickHereButton.click();
-            String messageText = notificationMessage.getText().trim();
-            if (messageText.contains(expectedMessage)) {
-                isSuccess = true;
-                System.out.println("Уведомление успешно: " + messageText);
-            } else {
-                System.out.println("Уведомление: " + messageText);
-                closeNotification(notificationMessage);
-            }
+            System.out.println("Уведомление после нажатия clickHere: " + notificationMessage.getText().trim());
+            notificationMessage.shouldHave(Condition.text(expectedMessage));
         }
     }
 
