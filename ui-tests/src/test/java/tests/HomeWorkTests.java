@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
@@ -144,14 +145,23 @@ public class HomeWorkTests {
 
     }
 
-    @Test
+    @ParameterizedTest(name = "Проверка текста при наведении на картинку {0}")
+    @CsvSource({
+            "1, name: user1 View profile",
+            "2, name: user2 View profile",
+            "3, name: user3 View profile"
+    })
     @DisplayName("Hover")
-    @Description("Перейти на страницу Hovers. Навести курсор на каждую картинку. Вывести в консоль текст, который появляется при наведении.")
-    public void hoverTest() {
+    @Description("Перейти на страницу Hovers. Навести курсор на каждую картинку. Вывести в консоль текст, который появляется при наведении." +
+            "Добавить проверки в задание Hovers из предыдущей лекции.\n" +
+            "При каждом наведении курсора, проверить, что отображаемый текст совпадает с ожидаемым.\n" +
+            "Выполнить тест с помощью @ParametrizedTest, в каждом тесте, указывая на какой элемент наводить курсор")
+    public void hoverTest(int imageIndex, String expectedText) {
         SelenideElement hoversButton = $x("//a[@href='/hovers']");
         clickLink(hoversButton, hoversButton.getText());
-        hoverOverImagesAndPrintText();
+        hoverOnImageAndPrintText(imageIndex, expectedText);
     }
+
 
     @Test
     @DisplayName("Notification Message")
@@ -279,23 +289,19 @@ public class HomeWorkTests {
         inputField.shouldBe(Condition.value(String.valueOf(randomNumber)));
     }
 
+    @Step("Навести курсор на картинку {0} и проверить текст")
+    private void hoverOnImageAndPrintText(int imageIndex, String expectedText) {
+        SelenideElement image = $x(String.format("//div[@class='figure'][%s]", imageIndex));
+        sleep(200);
 
-    @Step("Навести курсор на каждую картинку и вывести в консоль текст, который появляется при наведении.")
-    private void hoverOverImagesAndPrintText() {
-        ElementsCollection images = $$x("//div[@class='figure']");
+        image.shouldBe(Condition.visible);
+        image.hover();
 
-        for (int i = 0; i < images.size(); i++) {
-            hoverOnImageAndPrintText(images.get(i), i + 1);
-        }
-    }
-
-    @Step("Навести курсор на картинку {imageNumber} и вывести текст.")
-    private void hoverOnImageAndPrintText(SelenideElement image, int imageNumber) {
-        image.hover();  // Наводим курсор на изображение
-
-        // Захватываем текст, который появляется при наведении
         SelenideElement caption = image.$x(".//div[@class='figcaption']");
-        System.out.println("Текст, появившийся при наведении на изображение " + imageNumber + ":  \n" + caption.getText());
+        caption.shouldBe(Condition.visible);
+        caption.shouldHave(Condition.text(expectedText));
+
+        System.out.println("Текст, появившийся при наведении на изображение " + imageIndex  + ":  \n" + caption.getText());
     }
 
     @Step("Кликать до тех пор, пока не покажется уведомление Action successful. После каждого неудачного клика закрывать всплывающее уведомление.")
