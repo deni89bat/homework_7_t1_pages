@@ -13,12 +13,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 import static io.qameta.allure.Allure.addAttachment;
+import static org.junit.Assert.assertEquals;
 
 public class HomeWorkTests {
     // Регистрация расширения для создания скриншотов
@@ -74,7 +77,7 @@ public class HomeWorkTests {
         selectOption(dropdownElement, 2);
     }
 
-    @RepeatedTest(failureThreshold = 5, value = 10,  name = "Запуск {currentRepetition} из {totalRepetitions}" )
+    @RepeatedTest(failureThreshold = 5, value = 10, name = "Запуск {currentRepetition} из {totalRepetitions}")
     @DisplayName("Disappearing Elements")
     @Description("Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой." +
             "Для каждого обновления страницы проверять наличие 5 элементов. Использовать @RepeatedTest")
@@ -84,14 +87,61 @@ public class HomeWorkTests {
         check5Elements();
     }
 
-    @Test
+    @TestFactory
     @DisplayName("Inputs")
-    @Description("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
-    public void inputsTest() {
+    @Description("Перейти на страницу Inputs. Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input." +
+            "Добавить проверки в задание Inputs из предыдущей лекции. Проверить, что в поле ввода отображается именно то число, которое было введено. " +
+            "Повторить тест 10 раз, используя @TestFactory, с разными значениями, вводимыми в поле ввода. " +
+            "Создать проверку негативных кейсов (попытка ввести в поле латинские буквы, спецсимволы, пробел до и после числа).")
+    List<DynamicTest> inputsTestFactoryTest() {
+        List<DynamicTest> tests = new ArrayList<>();
         SelenideElement inputsButton = $x("//a[@href='/inputs']");
         SelenideElement inputField = $x("//input");
-        clickLink(inputsButton, inputsButton.getText());
-        enterRandomNumberInInput(inputField);
+
+        for (int i = 1; i <= 10; i++) {
+            final int iteration = i;
+            tests.add(DynamicTest.dynamicTest("Тест №" + iteration + ": Ввести любое случайное число от 1 до 10 000.",
+                    () -> {
+                        if (iteration == 1) {
+                            clickLink(inputsButton, inputsButton.getText());  // Кликаем на ссылку только в первом тесте
+                        }
+                        inputField.clear();  // Очищаем поле перед каждым вводом
+                        enterRandomNumberInInput(inputField);  // Вводим случайное число
+                    }));
+        }
+
+        // Негативные кейсы: ввод букв, символов и пробелов
+        List<String> negativeValues = List.of("abc",
+                "#$%",
+                " 123",
+                "123 ",
+                "123abc",
+                "",
+                "   ",
+                "-123");
+
+        for (String value : negativeValues) {
+            tests.add(DynamicTest.dynamicTest("Негативный тест с вводом: '" + value + "'",
+                    () -> {
+                        inputField.clear();
+                        inputField.sendKeys(value);
+                        checkInvalidInput(inputField, value);
+                    }));
+        }
+
+        return tests;
+    }
+
+    @Step("Проверка ввода недопустимого значения: '{value}'")
+    private void checkInvalidInput(SelenideElement inputField, String value) {
+        String expectedValue = value.replaceAll("[^0-9]", "");
+        if (expectedValue.isEmpty()) {
+            // Если в строке нет цифр, поле должно быть пустым
+            inputField.shouldBe(Condition.empty);
+        } else {
+            inputField.shouldBe(Condition.value(expectedValue));
+        }
+
     }
 
     @Test
@@ -220,11 +270,13 @@ public class HomeWorkTests {
     }
 
 
-    @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input.")
+    @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input." +
+            "Проверить, что в поле ввода отображается именно то число, которое было введено.")
     private void enterRandomNumberInInput(SelenideElement inputField) {
         int randomNumber = (int) (Math.random() * 10000) + 1;
         inputField.sendKeys(String.valueOf(randomNumber));
         System.out.println("Значение элемента Input: " + inputField.getValue());
+        inputField.shouldBe(Condition.value(String.valueOf(randomNumber)));
     }
 
 
