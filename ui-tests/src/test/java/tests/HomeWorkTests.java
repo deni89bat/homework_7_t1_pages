@@ -2,8 +2,10 @@ package tests;
 
 import com.codeborne.selenide.*;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
+import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,6 +36,9 @@ public class HomeWorkTests {
     public static void setup() {
         Configuration.browser = "chrome";
         Configuration.pageLoadStrategy = "eager";
+        SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
+                .screenshots(true)  // Записывать скриншоты
+                .savePageSource(true));
     }
 
     @BeforeEach
@@ -208,11 +213,11 @@ public class HomeWorkTests {
     @ValueSource(strings = {"200", "301", "404", "500"})
     @DisplayName("Status Code")
     @Description("""
-    Перейти на страницу Status Codes.
-    Кликнуть на каждый статус и вывести текст после перехода на страницу статуса.
-    Добавить проверки в задание Status Codes.
-    Добавить Проверку, что переход был осуществлен на страницу с корректным статусом.
-    """)
+            Перейти на страницу Status Codes.
+            Кликнуть на каждый статус и вывести текст после перехода на страницу статуса.
+            Добавить проверки в задание Status Codes.
+            Добавить Проверку, что переход был осуществлен на страницу с корректным статусом.
+            """)
     public void statusCodeTest(String status) {
         SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
         clickLink(statusCodesButton, statusCodesButton.getText());
