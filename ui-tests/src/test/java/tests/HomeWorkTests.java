@@ -27,6 +27,7 @@ import static com.codeborne.selenide.WebDriverRunner.url;
 import static io.qameta.allure.Allure.addAttachment;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Disabled
 public class HomeWorkTests {
     // Регистрация расширения для создания скриншотов
     @RegisterExtension

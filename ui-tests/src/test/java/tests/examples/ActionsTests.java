@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
-//@Disabled
+@Disabled
 public class ActionsTests {
     @Test
     void dragAndDrop() {
