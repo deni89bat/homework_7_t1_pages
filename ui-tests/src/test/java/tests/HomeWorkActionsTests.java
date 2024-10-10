@@ -10,7 +10,9 @@ import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.interactions.Actions;
+import tests.conditions.CustomElementConditions;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -43,6 +45,7 @@ public class HomeWorkActionsTests {
         open("https://the-internet.herokuapp.com/");
     }
 
+    //Основные тестовые методы
     @Test
     @DisplayName("Drag and Drop")
     @Description("""
@@ -60,6 +63,26 @@ public class HomeWorkActionsTests {
 
     }
 
+    @Test
+    @DisplayName("Context menu")
+    @Description("""
+            Перейти на страницу Context menu.
+            Нажать правой кнопкой мыши на отмеченной области и проверить, что JS Alert имеет ожидаемый текст.""")
+    public void contextMenuAlertTest() {
+        SelenideElement contextMenuButton = $x("//a[@href='/context_menu']");
+        SelenideElement boxElement = $x("//div[@id='hot-spot']");
+
+        clickLink(contextMenuButton, contextMenuButton.getText());
+        rightClickOnBox(boxElement);
+        checkAlertText("You selected a context menu");
+    }
+
+    //Шаги для тестов
+    @Step("Перейти на страницу {buttonName}")
+    private void clickLink(SelenideElement buttonElement, String buttonName) {
+        buttonElement.should(visible()).click();
+    }
+
     @Step("Перемещаем элемент A на элемент B. Проверяем, что элементы поменялись местами")
     private void moveElementAndCheck(SelenideElement holdElement, SelenideElement targetElement) {
         String holdElementText = holdElement.getText();
@@ -75,9 +98,18 @@ public class HomeWorkActionsTests {
         targetElement.shouldHave(text(holdElementText));
     }
 
-    @Step("Перейти на страницу {buttonName}")
-    private void clickLink(SelenideElement buttonElement, String buttonName) {
-        buttonElement.should(visible()).click();
+    @Step("Кликаем правой кнопкой мыши на отмеченной области")
+    private void rightClickOnBox(SelenideElement boxElement) {
+        boxElement.should(CustomElementConditions.visible()).contextClick();
+    }
+
+    @Step("Проверяем, что JS Alert содержит текст '{expectedText}'")
+    private void checkAlertText(String expectedText) {
+        Alert activeAlert = switchTo().alert();
+        String alertText = activeAlert.getText();
+        System.out.println("Текст алерта: " + alertText);
+
+        Assertions.assertEquals(expectedText, alertText);
     }
 
     // Метод для добавления скриншота в отчет Allure
