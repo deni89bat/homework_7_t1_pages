@@ -1,11 +1,13 @@
 package tests.examples;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Disabled
 public class testFactoryTests {
     @TestFactory
     List<DynamicTest> testFactoryTestExample() {

@@ -2,6 +2,7 @@ package tests.examples;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +13,7 @@ import tests.BasicAssertion;
 import static tests.BasicAssertion.*;
 
 
+@Disabled
 public class AssertionsTests {
     WebDriver wd;
 

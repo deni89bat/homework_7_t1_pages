@@ -21,6 +21,7 @@ import java.util.Random;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.url;
 import static io.qameta.allure.Allure.addAttachment;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -197,54 +198,36 @@ public class HomeWorkTests {
                     openBaseUrl();
                     SelenideElement addRemoveElementsButton = $x("//a[@href='/add_remove_elements/']");
                     clickLink(addRemoveElementsButton, addRemoveElementsButton.getText());
-                    addElement(addCount);
+                    addElements(addCount);
                     deleteElements(deleteCount);
                 }
         );
     }
 
-    @Test
-    @DisplayName("Status Code 200")
-    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
-    public void statusCode200Test() {
+    @ParameterizedTest
+    @ValueSource(strings = {"200", "301", "404", "500"})
+    @DisplayName("Status Code")
+    @Description("""
+    Перейти на страницу Status Codes.
+    Кликнуть на каждый статус и вывести текст после перехода на страницу статуса.
+    Добавить проверки в задание Status Codes.
+    Добавить Проверку, что переход был осуществлен на страницу с корректным статусом.
+    """)
+    public void statusCodeTest(String status) {
         SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
         clickLink(statusCodesButton, statusCodesButton.getText());
-        clickStatusAndPrintText("200");
+        clickAndCheckStatus(status);
     }
 
-    @Test
-    @DisplayName("Status Code 301")
-    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
-    public void statusCode301Test() {
-        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
-        clickLink(statusCodesButton, statusCodesButton.getText());
-        clickStatusAndPrintText("301");
-    }
-
-    @Test
-    @DisplayName("Status Code 404")
-    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
-    public void statusCode404Test() {
-        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
-        clickLink(statusCodesButton, statusCodesButton.getText());
-        clickStatusAndPrintText("404");
-    }
-
-    @Test
-    @DisplayName("Status Code 500")
-    @Description("Перейти на страницу Status Codes. Кликнуть на каждый статус в новом тестовом методе, вывести на экран текст после перехода на страницу статуса.")
-    public void statusCode500Test() {
-        SelenideElement statusCodesButton = $x("//a[@href='/status_codes']");
-        clickLink(statusCodesButton, statusCodesButton.getText());
-        clickStatusAndPrintText("500");
-    }
-
-    @Step("Кликнуть на статус {status} и вывести текст страницы статуса.")
-    private void clickStatusAndPrintText(String status) {
+    @Step("Кликнуть на статус {status} и вывести текст страницы статуса. Переход был осуществлен на страницу с корректным статусом")
+    private void clickAndCheckStatus(String status) {
         SelenideElement statusLink = $x("//a[contains(text(), '" + status + "')]");
         statusLink.click();
+        SelenideElement pageTextElement = $x("//div[@class='example']/p");
+        pageTextElement.shouldHave(text("This page returned a " + status + " status code."));
+        url().contains(status);
 
-        String pageText = $x("//div[@class='example']/p").getText();
+        String pageText = pageTextElement.getText();
         String statusMessage = pageText.split("For a definition")[0].trim();
         System.out.println("Текст страницы статуса (" + status + "): \n" + statusMessage);
     }
@@ -362,23 +345,13 @@ public class HomeWorkTests {
         closeButton.click();
     }
 
-    @Step("Нажать на кнопку Add Element {0} раз. С каждым нажатием выводить в консоль текст появившегося элемента.")
-    private void addElements(int count) {
-        SelenideElement addButton = $x("//button[text()='Add Element']");
-
-        for (int i = 1; i <= count; i++) {
-            addButton.click();
-            System.out.println("Добавлен элемент с текстом: " + getLastAddedElement().getText());
-        }
-    }
-
     @Step("Получить последний добавленный элемент.")
     private SelenideElement getLastAddedElement() {
         return $$x("//button[text()='Delete']").last();
     }
 
     @Step("Нажать на  кнопку Add Element {0} раз. Выводить в консоль количество добавленных кнопок их тексты.")
-    private void addElement(int count) {
+    private void addElements(int count) {
         for (int i = 1; i <= count; i++) {
             $x("//button[text()='Add Element']").click();
             System.out.println("Добавлен элемент №" + i);
