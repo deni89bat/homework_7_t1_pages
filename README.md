@@ -34,22 +34,6 @@
    ```bash
    git clone https://github.com/deni89bat/homework_6_t1_open_school.git 
 
-
-## Структура проекта 
-
-ваш_репозиторий/
-│
-├── build.gradle
-├── settings.gradle
-├── src/
-│   └── test/
-│       └── java/
-│           └── tests/
-│               └── HomeWorkActionsTests.java
-│
-└── target/
-└── screenshots/
-
 ## Запуск тестов
 Для запуска тестов и генерации отчетов выполните следующие команды:
 1. Запустите тесты из модуля `ui-tests`:
