@@ -32,7 +32,7 @@
 ## Установка
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/ваш-логин/ваш-репозиторий.git
+   git clone https://github.com/deni89bat/homework_6_t1_open_school.git 
 
 
 ## Структура проекта 
@@ -53,8 +53,11 @@
 ## Запуск тестов
 Для запуска тестов и генерации отчетов выполните следующие команды:
 1. Запустите тесты из модуля `ui-tests`:
-   ./gradlew :ui-tests:test --tests "tests.HomeWorkActionsTests"
+    ```bash
+    ./gradlew :ui-tests:test --tests "tests.HomeWorkActionsTests" 
 2. Сгенерируйте отчет Allure:
-   ./gradlew allureReport
+   ```bash
+    ./gradlew allureReport 
 3. Просмотрите отчет Allure в веб-браузере:
-   ./gradlew allureServe
+   ```bash
+   ./gradlew allureServe 
