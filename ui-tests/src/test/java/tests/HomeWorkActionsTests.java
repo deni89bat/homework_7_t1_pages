@@ -11,6 +11,7 @@ import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 import tests.conditions.CustomElementConditions;
 
@@ -76,6 +77,7 @@ public class HomeWorkActionsTests {
         rightClickOnBox(boxElement);
         checkAlertText("You selected a context menu");
     }
+
     @Test
     @DisplayName("Infinite Scroll")
     @Description("""
@@ -83,23 +85,33 @@ public class HomeWorkActionsTests {
             Проскролить страницу до текста «Eius», проверить, что текст в поле зрения.""")
     public void infiniteScrollTest() {
         SelenideElement infiniteScrollButton = $x("//a[@href='/infinite_scroll']");
-        SelenideElement boxElement = $x("//div[@id='hot-spot']");
 
         clickLink(infiniteScrollButton, infiniteScrollButton.getText());
         scrollToText("Eius");
-        checkAlertText("You selected a context menu");
     }
 
-    private void scrollToText(String eius) {
-    }
+    @Test
+    @DisplayName("Key Presses")
+    @Description("""
+            Перейти на страницу Key Presses.
+            Нажать по 10 латинских символов, клавиши Enter, Ctrl, Alt, Tab.
+            Проверить, что после нажатия отображается всплывающий текст снизу, соответствующий конкретной клавише.""")
+    public void keyPressesTest() {
+        SelenideElement keyPressesButton = $x("//a[@href='/key_presses']");
 
+        clickLink(keyPressesButton, keyPressesButton.getText());
+        pressKeysAndCheck("ABCDEFGHIJ",
+                Keys.ENTER, Keys.CONTROL, Keys.ALT, Keys.TAB);
+    }
 
     //Шаги для тестов
+    //Общий
     @Step("Перейти на страницу {buttonName}")
     private void clickLink(SelenideElement buttonElement, String buttonName) {
-        buttonElement.should(visible()).click();
+        buttonElement.shouldBe(CustomElementConditions.visible()).click();
     }
 
+    //Drag and Drop
     @Step("Перемещаем элемент A на элемент B. Проверяем, что элементы поменялись местами")
     private void moveElementAndCheck(SelenideElement holdElement, SelenideElement targetElement) {
         String holdElementText = holdElement.getText();
@@ -115,9 +127,10 @@ public class HomeWorkActionsTests {
         targetElement.shouldHave(text(holdElementText));
     }
 
+    //Context menu
     @Step("Кликаем правой кнопкой мыши на отмеченной области")
     private void rightClickOnBox(SelenideElement boxElement) {
-        boxElement.should(CustomElementConditions.visible()).contextClick();
+        boxElement.shouldBe(CustomElementConditions.visible()).contextClick();
     }
 
     @Step("Проверяем, что JS Alert содержит текст '{expectedText}'")
@@ -127,6 +140,63 @@ public class HomeWorkActionsTests {
         System.out.println("Текст алерта: " + alertText);
 
         Assertions.assertEquals(expectedText, alertText);
+    }
+
+    //Infinite Scroll
+    @Step("Прокрутить страницу до текста '{text}'")
+    private void scrollToText(String text) {
+        SelenideElement textElement = $x("//*[contains(text(), '" + text + "')]");
+        Actions actions = new Actions(getWebDriver());
+
+        while (!textElement.isDisplayed()) {
+            actions.scrollByAmount(0, 1000).perform();
+            sleep(300);
+        }
+
+        textElement.shouldBe(CustomElementConditions.visible());
+        System.out.println("Текст '" + text + "' в поле зрения.");
+
+        highlightSpecificText(textElement, text);
+    }
+
+    @Step("Выделить элемент")
+    private void highlightSpecificText(SelenideElement element, String textToHighlight) {
+        executeJavaScript(
+                "arguments[0].innerHTML = arguments[0].innerHTML.replace(arguments[1], " +
+                        "'<span style=\"background-color: yellow; color: red;\">' + arguments[1] + '</span>');",
+                element, textToHighlight
+        );
+    }
+
+    //Key Presses
+    @Step("Нажать клавиши и проверить отображение результата")
+    private void pressKeysAndCheck(String letters, Keys... specialKeys) {
+        SelenideElement resultText = $x("//p[@id='result']");
+
+        // Обрабатываем латинские символы
+        for (char letter : letters.toCharArray()) {
+            pressKey(Character.toString(letter), resultText);
+        }
+        // Обрабатываем специальные клавиши
+        for (Keys key : specialKeys) {
+            pressKey(key, resultText);
+        }
+
+    }
+
+    @Step("Нажать клавишу {key} и проверить отображение результата")
+    private void pressKey(CharSequence key, SelenideElement resultText) {
+        actions().sendKeys(key).perform();
+        resultText.shouldHave(text("You entered: " + keyToReadableString(key)));
+    }
+
+    private String keyToReadableString(CharSequence key) {
+        if (key.equals(Keys.ENTER)) return "ENTER";
+        if (key.equals(Keys.CONTROL)) return "CONTROL";
+        if (key.equals(Keys.ALT)) return "ALT";
+        if (key.equals(Keys.TAB)) return "TAB";
+
+        return key.toString().toUpperCase();
     }
 
     // Метод для добавления скриншота в отчет Allure
