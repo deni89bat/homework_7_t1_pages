@@ -76,6 +76,23 @@ public class HomeWorkActionsTests {
         rightClickOnBox(boxElement);
         checkAlertText("You selected a context menu");
     }
+    @Test
+    @DisplayName("Infinite Scroll")
+    @Description("""
+            Перейти на страницу Infinite Scroll.
+            Проскролить страницу до текста «Eius», проверить, что текст в поле зрения.""")
+    public void infiniteScrollTest() {
+        SelenideElement infiniteScrollButton = $x("//a[@href='/infinite_scroll']");
+        SelenideElement boxElement = $x("//div[@id='hot-spot']");
+
+        clickLink(infiniteScrollButton, infiniteScrollButton.getText());
+        scrollToText("Eius");
+        checkAlertText("You selected a context menu");
+    }
+
+    private void scrollToText(String eius) {
+    }
+
 
     //Шаги для тестов
     @Step("Перейти на страницу {buttonName}")
