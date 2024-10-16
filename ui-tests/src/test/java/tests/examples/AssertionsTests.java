@@ -1,5 +1,7 @@
 package tests.examples;
 
+import static tests.BasicAssertion.assertThat;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -8,13 +10,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import tests.BasicAssertion;
-
-import static tests.BasicAssertion.*;
 
 
 @Disabled
 public class AssertionsTests {
+
     WebDriver wd;
 
     @BeforeEach
@@ -31,13 +31,13 @@ public class AssertionsTests {
     }
 
     @Test
-    void assertValueTest(){
+    void assertValueTest() {
 
         WebElement title = wd.findElement(By.xpath("//h1"));
         //assert title.getText().equals("Интернет");
         assertThat(title)
-                .isVisible()
-                .textIsEqual("Welcome to the-internet");
+            .isVisible()
+            .textIsEqual("Welcome to the-internet");
 
         WebElement inputButton = wd.findElement(By.xpath("//a[@href='/inputs']"));
         inputButton.click();
@@ -45,9 +45,9 @@ public class AssertionsTests {
         inputField.sendKeys("10");
 
         assertThat(inputField)
-                .isVisible()
-                .isSelected()
-                .valueIsEqual("11");
+            .isVisible()
+            .isSelected()
+            .valueIsEqual("11");
     }
 
     @AfterEach

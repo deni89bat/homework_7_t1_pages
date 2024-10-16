@@ -3,18 +3,17 @@ package tests.conditions;
 import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.WebElementsCondition;
+import java.util.List;
+import javax.annotation.CheckReturnValue;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import java.util.List;
-
 public class AllElementsInCollectionIsVisible extends WebElementsCondition {
+
     @NotNull
     @CheckReturnValue
     @Override
-    public CheckResult check(Driver driver,  List<WebElement> elements) {
+    public CheckResult check(Driver driver, List<WebElement> elements) {
         boolean result = isAllElementsVisible(elements);
         return new CheckResult(result, elements);
     }
@@ -28,9 +27,10 @@ public class AllElementsInCollectionIsVisible extends WebElementsCondition {
     public String errorMessage() {
         return "Elements list is all visible";
     }
+
     private boolean isAllElementsVisible(List<WebElement> elements) {
-        for(WebElement element : elements) {
-            if(!element.isDisplayed())  {
+        for (WebElement element : elements) {
+            if (!element.isDisplayed()) {
                 return false;
             }
         }

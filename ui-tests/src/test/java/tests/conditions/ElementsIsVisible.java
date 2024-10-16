@@ -7,7 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
 public class ElementsIsVisible extends WebElementCondition {
+
     boolean expectedValue;
+
     protected ElementsIsVisible(String name) {
         super(name);
     }
@@ -23,7 +25,7 @@ public class ElementsIsVisible extends WebElementCondition {
 
     @Override
     @NotNull
-    public  String toString() {
+    public String toString() {
         return String.valueOf(expectedValue);
     }
 }

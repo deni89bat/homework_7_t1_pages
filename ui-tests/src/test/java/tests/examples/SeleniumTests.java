@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 @Disabled
 public class SeleniumTests {
+
     WebDriver wd;
 
     @BeforeEach
@@ -27,8 +28,6 @@ public class SeleniumTests {
         WebElement pageTitle = wd.findElement(By.xpath("//h3"));
         assert pageTitle.getText().equals("Infinite Scroll");
     }
-
-    ;
 
     @AfterEach
     void tearDown() {

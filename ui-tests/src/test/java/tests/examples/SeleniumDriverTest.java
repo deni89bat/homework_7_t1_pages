@@ -1,5 +1,7 @@
 package tests.examples;
 
+import java.time.Duration;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -10,11 +12,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.time.Duration;
-import java.util.List;
-
 @Disabled
 public class SeleniumDriverTest {
+
     WebDriver webDriver;
 
     @BeforeEach
@@ -32,9 +32,10 @@ public class SeleniumDriverTest {
         WebElement element = webDriver.findElement(By.xpath("//input[@value='Войти в систему']"));
         element.click();
 
-        WebElement loginInput = webDriver.findElement(By.xpath("//input[@id='user_login_form_login']"));
-        WebElement labelOfLogin = webDriver.findElement(By.xpath("//label[@for='user_login_form_login']"));
-
+        WebElement loginInput = webDriver.findElement(
+            By.xpath("//input[@id='user_login_form_login']"));
+        WebElement labelOfLogin = webDriver.findElement(
+            By.xpath("//label[@for='user_login_form_login']"));
 
         loginInput.sendKeys("sasasas");
         loginInput.sendKeys(Keys.BACK_SPACE);

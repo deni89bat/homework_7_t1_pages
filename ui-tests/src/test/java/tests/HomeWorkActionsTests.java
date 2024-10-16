@@ -1,5 +1,16 @@
 package tests;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.executeJavaScript;
+import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.Selenide.switchTo;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static io.qameta.allure.Allure.addAttachment;
+
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.SelenideElement;
@@ -8,37 +19,36 @@ import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 import tests.conditions.CustomElementConditions;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static io.qameta.allure.Allure.addAttachment;
-import static tests.conditions.CustomElementConditions.*;
-
 public class HomeWorkActionsTests {
+
     // Регистрация расширения для создания скриншотов
     @RegisterExtension
-    static ScreenShooterExtension screenshotEmAll = new ScreenShooterExtension(true).to("target/screenshots");
+    static ScreenShooterExtension screenshotEmAll = new ScreenShooterExtension(true).to(
+        "target/screenshots");
 
     @BeforeAll
     public static void setup() {
         Configuration.browser = "chrome";
         Configuration.pageLoadStrategy = "eager";
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-                .screenshots(true)
-                .savePageSource(true));
+            .screenshots(true)
+            .savePageSource(true));
     }
 
     @BeforeEach
@@ -50,10 +60,10 @@ public class HomeWorkActionsTests {
     @Test
     @DisplayName("Drag and Drop")
     @Description("""
-            Перейти на страницу Drag and Drop.
-            Перетащить элемент A на элемент B.
-            Задача на 10 баллов – сделать это, не прибегая к методу DragAndDrop();
-            Проверить, что элементы поменялись местами""")
+        Перейти на страницу Drag and Drop.
+        Перетащить элемент A на элемент B.
+        Задача на 10 баллов – сделать это, не прибегая к методу DragAndDrop();
+        Проверить, что элементы поменялись местами""")
     public void dragAndDropTest() {
         SelenideElement dragAndDropButton = $x("//a[@href='/drag_and_drop']");
         SelenideElement elementA = $x("//div[@id='column-a']");
@@ -67,8 +77,8 @@ public class HomeWorkActionsTests {
     @Test
     @DisplayName("Context menu")
     @Description("""
-            Перейти на страницу Context menu.
-            Нажать правой кнопкой мыши на отмеченной области и проверить, что JS Alert имеет ожидаемый текст.""")
+        Перейти на страницу Context menu.
+        Нажать правой кнопкой мыши на отмеченной области и проверить, что JS Alert имеет ожидаемый текст.""")
     public void contextMenuAlertTest() {
         SelenideElement contextMenuButton = $x("//a[@href='/context_menu']");
         SelenideElement boxElement = $x("//div[@id='hot-spot']");
@@ -81,8 +91,8 @@ public class HomeWorkActionsTests {
     @Test
     @DisplayName("Infinite Scroll")
     @Description("""
-            Перейти на страницу Infinite Scroll.
-            Проскролить страницу до текста «Eius», проверить, что текст в поле зрения.""")
+        Перейти на страницу Infinite Scroll.
+        Проскролить страницу до текста «Eius», проверить, что текст в поле зрения.""")
     public void infiniteScrollTest() {
         SelenideElement infiniteScrollButton = $x("//a[@href='/infinite_scroll']");
 
@@ -93,15 +103,15 @@ public class HomeWorkActionsTests {
     @Test
     @DisplayName("Key Presses")
     @Description("""
-            Перейти на страницу Key Presses.
-            Нажать по 10 латинских символов, клавиши Enter, Ctrl, Alt, Tab.
-            Проверить, что после нажатия отображается всплывающий текст снизу, соответствующий конкретной клавише.""")
+        Перейти на страницу Key Presses.
+        Нажать по 10 латинских символов, клавиши Enter, Ctrl, Alt, Tab.
+        Проверить, что после нажатия отображается всплывающий текст снизу, соответствующий конкретной клавише.""")
     public void keyPressesTest() {
         SelenideElement keyPressesButton = $x("//a[@href='/key_presses']");
 
         clickLink(keyPressesButton, keyPressesButton.getText());
         pressKeysAndCheck("ABCDEFGHIJ",
-                Keys.ENTER, Keys.CONTROL, Keys.ALT, Keys.TAB);
+            Keys.ENTER, Keys.CONTROL, Keys.ALT, Keys.TAB);
     }
 
     //Шаги для тестов
@@ -119,9 +129,9 @@ public class HomeWorkActionsTests {
         Actions actions = new Actions(getWebDriver());
 
         actions.clickAndHold(holdElement)
-                .moveToElement(targetElement)
-                .release()
-                .perform();
+            .moveToElement(targetElement)
+            .release()
+            .perform();
 
         holdElement.shouldHave(text(targetElementText));
         targetElement.shouldHave(text(holdElementText));
@@ -162,9 +172,9 @@ public class HomeWorkActionsTests {
     @Step("Выделить элемент")
     private void highlightSpecificText(SelenideElement element, String textToHighlight) {
         executeJavaScript(
-                "arguments[0].innerHTML = arguments[0].innerHTML.replace(arguments[1], " +
-                        "'<span style=\"background-color: yellow; color: red;\">' + arguments[1] + '</span>');",
-                element, textToHighlight
+            "arguments[0].innerHTML = arguments[0].innerHTML.replace(arguments[1], " +
+                "'<span style=\"background-color: yellow; color: red;\">' + arguments[1] + '</span>');",
+            element, textToHighlight
         );
     }
 
@@ -191,10 +201,18 @@ public class HomeWorkActionsTests {
     }
 
     private String keyToReadableString(CharSequence key) {
-        if (key.equals(Keys.ENTER)) return "ENTER";
-        if (key.equals(Keys.CONTROL)) return "CONTROL";
-        if (key.equals(Keys.ALT)) return "ALT";
-        if (key.equals(Keys.TAB)) return "TAB";
+        if (key.equals(Keys.ENTER)) {
+            return "ENTER";
+        }
+        if (key.equals(Keys.CONTROL)) {
+            return "CONTROL";
+        }
+        if (key.equals(Keys.ALT)) {
+            return "ALT";
+        }
+        if (key.equals(Keys.TAB)) {
+            return "TAB";
+        }
 
         return key.toString().toUpperCase();
     }
@@ -205,7 +223,8 @@ public class HomeWorkActionsTests {
         if (screenshotFile != null) {
             try {
                 byte[] screenshotBytes = Files.readAllBytes(screenshotFile.toPath());
-                addAttachment("Финальный скриншот", "image/png", new ByteArrayInputStream(screenshotBytes), "png");
+                addAttachment("Финальный скриншот", "image/png",
+                    new ByteArrayInputStream(screenshotBytes), "png");
             } catch (IOException e) {
                 e.printStackTrace();
             }

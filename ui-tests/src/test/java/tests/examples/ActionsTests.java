@@ -1,7 +1,13 @@
 package tests.examples;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.DragAndDropOptions;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.AfterEach;
@@ -9,12 +15,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.interactions.Actions;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-
 @Disabled
 public class ActionsTests {
+
     @Test
     void dragAndDrop() {
         Selenide.open("https://the-internet.herokuapp.com/");
@@ -36,7 +39,8 @@ public class ActionsTests {
 
         actions.clickAndHold(elementA).perform();
         for (int i = 0; i < 100; i++) {
-            actions.moveToLocation((xOfDestination - xOfElement) / 100, (yOfDestination - yOfElement) / 100).perform();
+            actions.moveToLocation((xOfDestination - xOfElement) / 100,
+                (yOfDestination - yOfElement) / 100).perform();
         }
         actions.release().perform();
 
@@ -63,16 +67,15 @@ public class ActionsTests {
 
         // Выполняем перетаскивание элемента A на позицию B
         actions.clickAndHold(elementA)
-                .moveToElement(elementB)
-                .release()
-                .build()
-                .perform();
+            .moveToElement(elementB)
+            .release()
+            .build()
+            .perform();
 
         // Проверяем, что элементы поменялись местами по тексту
         elementA.shouldHave(text("B"));
         elementB.shouldHave(text("A"));
     }
-
 
 
     @AfterEach

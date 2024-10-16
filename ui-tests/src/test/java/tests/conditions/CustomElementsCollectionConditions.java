@@ -3,6 +3,7 @@ package tests.conditions;
 import com.codeborne.selenide.WebElementsCondition;
 
 public class CustomElementsCollectionConditions {
+
     public static WebElementsCondition allElementsIsVisible() {
         return new AllElementsInCollectionIsVisible();
     }

@@ -1,5 +1,10 @@
 package tests.examples;
 
+import static com.codeborne.selenide.Selenide.$$x;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.open;
+
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.AfterEach;
@@ -8,9 +13,8 @@ import org.junit.jupiter.api.Test;
 import tests.conditions.CustomElementConditions;
 import tests.conditions.CustomElementsCollectionConditions;
 
-import static com.codeborne.selenide.Selenide.*;
-
 public class CustomElementConditionTests {
+
     @BeforeEach
     void setup() {
         open("https://the-internet.herokuapp.com/");
@@ -23,7 +27,7 @@ public class CustomElementConditionTests {
 
         ElementsCollection elementsControls = $$x("//a");
         elementsControls.should(CustomElementsCollectionConditions.allElementsIsVisible())
-                .should(CustomElementsCollectionConditions.elementsIsSortedAsc());
+            .should(CustomElementsCollectionConditions.elementsIsSortedAsc());
     }
 
     @AfterEach

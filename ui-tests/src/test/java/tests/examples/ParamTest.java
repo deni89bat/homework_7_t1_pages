@@ -10,6 +10,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 @Disabled
 public class ParamTest {
+
+    public static String[] getTestData() {
+        return new String[]{"String1", "String2"};
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"String1", "String2"})
     void paramTest(String param) {
@@ -28,14 +33,10 @@ public class ParamTest {
         System.out.println(param);
     }
 
-    public static String[] getTestData() {
-        return new String[]{"String1", "String2"};
-    }
-
-    @RepeatedTest(failureThreshold = 12, value =50,  name = "Попытка {currentRepetition} из {totalRepetitions}" )
+    @RepeatedTest(failureThreshold = 12, value = 50, name = "Попытка {currentRepetition} из {totalRepetitions}")
     @MethodSource("getTestData")
     public void repeatedExmpleTest(RepetitionInfo info) {
         System.out.println(info.getCurrentRepetition());
-        assert 1==2;
+        assert 1 == 2;
     }
 }

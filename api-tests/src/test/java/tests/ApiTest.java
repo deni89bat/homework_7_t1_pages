@@ -27,12 +27,12 @@ public class ApiTest {
     @Step("Получение пользователя с ID {userId}")
     public Response getUser(int userId) {
         return RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/users/" + userId)
-                .then()
-                .extract().response();
+            .given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/users/" + userId)
+            .then()
+            .extract().response();
     }
 
     @Step("Проверка статуса ответа")
@@ -47,6 +47,7 @@ public class ApiTest {
 
     @Step("Проверка имени пользователя")
     public void validateUserName(String name) {
-        assertEquals("Leanne Graham", name, "Ожидалось имя 'Leanne Graham', но было получено другое.");
+        assertEquals("Leanne Graham", name,
+            "Ожидалось имя 'Leanne Graham', но было получено другое.");
     }
 }
