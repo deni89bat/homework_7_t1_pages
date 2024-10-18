@@ -1,31 +1,31 @@
 package tests;
 
+import endpoints.Urls;
 import io.restassured.response.Response;
-import tests.endpoints.Urls;
-import tests.utils.RestApiBuilder;
+import utils.RestApiBuilder;
 
 public class AuthApi {
 
     public static Response registerNewUser(String login, String password) {
-        return new RestApiBuilder("http://9b142cdd34e.vps.myjino.ru:49268").build()
+        return new RestApiBuilder(BasicApi.config.baseURI()).build()
             .body("""
-            {
-              "username": "%s",
-              "password": "%s"
-            }
-            """.formatted(login, password))
+                {
+                  "username": "%s",
+                  "password": "%s"
+                }
+                """.formatted(login, password))
             .post(Urls.REGISTER);
     }
 
     public static Response loginUser(String login, String password) {
-        return new RestApiBuilder("http://9b142cdd34e.vps.myjino.ru:49268").build()
+        return new RestApiBuilder(Urls.BASE).build()
             .body("""
-            {
-              "username": "%s",
-              "password": "%s"
-            }
-            """.formatted(login, password))
-            .post(Urls.LOGIN);
+                {
+                  "username": "%s",
+                  "password": "%s"
+                }
+                """.formatted(login, password))
+            .post(Urls.LOGIN).then().log().all().extract().response();
     }
 
 }

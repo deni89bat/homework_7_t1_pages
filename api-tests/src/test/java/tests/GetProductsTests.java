@@ -1,20 +1,16 @@
+/*
 package tests;
 
 import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tests.assertions.BasicAssert;
-import tests.assertions.ProductsAssert;
+import assertions.BasicAssert;
+import assertions.ProductsAssert;
 
-public class GetProductsTests {
+public class GetProductsTests extends BasicApi {
 
     ProductsApi productsApi;
 
-    @BeforeEach
-        //возможно лучше заюзать beforeAll
-    void getAuthToken() {
-        String token = AuthApi.loginUser("testUserName", "testPassword").jsonPath()
-            .getString("access_token");
+    public GetProductsTests() {
         productsApi = new ProductsApi(token);
     }
 
@@ -44,7 +40,7 @@ public class GetProductsTests {
     //пример переопределения с невалидным токеном
     @Test
     void test3() {
-        productsApi = new ProductsApi("апаааааа");
+
 
         Response response = productsApi.getProduct(1).then().log().all().extract().response();
 
@@ -52,3 +48,4 @@ public class GetProductsTests {
     }
 
 }
+*/

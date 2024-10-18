@@ -1,10 +1,10 @@
-package tests.utils;
+package utils;
+
+import static io.restassured.RestAssured.given;
 
 import io.restassured.config.HttpClientConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.specification.RequestSpecification;
-
-import static io.restassured.RestAssured.given;
 
 public class RestApiBuilder {
 
@@ -28,8 +28,8 @@ public class RestApiBuilder {
         return requestSpecification;
     }
 
-    public RestApiBuilder addAuth(String token)  {
-        requestSpecification.header("Authorization","Bearer " + token);
+    public RestApiBuilder addAuth(String token) {
+        requestSpecification.header("Authorization", "Bearer " + token);
 
         return this;
     }

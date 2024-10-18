@@ -1,4 +1,5 @@
-package tests.dto.request;
+package dto.request;
+
 //можно добавить ломбоковский билдер @Builder и @Getter
 public class DTOProduct {
 

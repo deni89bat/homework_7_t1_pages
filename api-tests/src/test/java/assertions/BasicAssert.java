@@ -1,4 +1,4 @@
-package tests.assertions;
+package assertions;
 
 import io.restassured.response.Response;
 import org.assertj.core.api.AbstractAssert;
@@ -22,6 +22,14 @@ public class BasicAssert extends AbstractAssert<BasicAssert, Response> {
         return this;
     }
 
+    public BasicAssert responseMessageContainText(String msg) {
+        Assertions.assertThat(actual.getBody().asString())
+            .as("Сообщение в ответе не содержит: " + msg)
+            .contains(msg);
+
+        return this;
+    }
+
     public BasicAssert responseContainField(String path) {
         Assertions.assertThat(actual.jsonPath().getString(path))
             .as("Поле '" + path + "' не найдено в теле ответа")
@@ -38,8 +46,9 @@ public class BasicAssert extends AbstractAssert<BasicAssert, Response> {
         return this;
     }
 
+
     public BasicAssert responseFieldIsEqual(String path, int value) {
-        Assertions.assertThat(actual.jsonPath().getInt(path))
+        Assertions.assertThat(actual.jsonPath().getInt(path + "[0]"))
             .as("Поле '%s' не равно '%d'".formatted(path, value))
             .isEqualTo(value);
 

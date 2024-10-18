@@ -1,6 +1,8 @@
-package tests.dto.response;
+package dto.response;
+
 //@Getter @Setter
 public class DTOProduct {
+
     String name;
 
     String category;
