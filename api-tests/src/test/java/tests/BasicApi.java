@@ -3,7 +3,10 @@ package tests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.APIConfig;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.aeonbits.owner.ConfigFactory;
@@ -16,12 +19,15 @@ public class BasicApi {
     protected static String token;
 
     @BeforeAll
-    static void setup() {
+    static void setUp() {
         config = ConfigFactory.create(APIConfig.class, System.getProperties());
         RestAssured.baseURI = config.baseURI();
-        AuthApi.registerNewUser("bat666888", "pass8888");
+
+        if (config.loggingEnabled()) {
+            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), new AllureRestAssured());
+        }
+
         token = getAuthToken();
-        // Токен теперь статически инициализируется
     }
 
     static String getAuthToken() {

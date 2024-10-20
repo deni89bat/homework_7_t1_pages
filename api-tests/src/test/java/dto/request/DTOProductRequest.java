@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DTOProduct {
+public class DTOProductRequest {
 
     private String name;
     private String category;

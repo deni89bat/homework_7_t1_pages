@@ -6,7 +6,7 @@ import lombok.Setter;
 //@Getter @Setter
 @Getter
 @Setter
-public class DTOProduct {
+public class DTOProductResponse {
 
     String name;
 

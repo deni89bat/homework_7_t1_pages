@@ -4,28 +4,28 @@ import endpoints.Urls;
 import io.restassured.response.Response;
 import utils.RestApiBuilder;
 
-public class AuthApi {
+public class AuthApi extends BasicApi{
 
     public static Response registerNewUser(String login, String password) {
-        return new RestApiBuilder(BasicApi.config.baseURI()).build()
+        return new RestApiBuilder(config.baseURI()).build()
             .body("""
                 {
                   "username": "%s",
                   "password": "%s"
                 }
                 """.formatted(login, password))
-            .post(Urls.REGISTER);
+            .post(config.registerEndpoint());
     }
 
     public static Response loginUser(String login, String password) {
-        return new RestApiBuilder(Urls.BASE).build()
+        return new RestApiBuilder(config.baseURI()).build()
             .body("""
                 {
                   "username": "%s",
                   "password": "%s"
                 }
                 """.formatted(login, password))
-            .post(Urls.LOGIN).then().log().all().extract().response();
+            .post(config.loginEndpoint());
     }
 
 }

@@ -1,10 +1,11 @@
 package assertions;
 
+import dto.response.DTOProductResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
-import schema.Product;
 
 public class ProductsAssert extends AbstractAssert<ProductsAssert, Response> {
 
@@ -16,33 +17,65 @@ public class ProductsAssert extends AbstractAssert<ProductsAssert, Response> {
         return new ProductsAssert(actual);
     }
 
-    public ProductsAssert verifyProductResponseStructure() {
-        BasicAssert.assertThat(actual).isNotNull()
-            .responseContainField("[0]"); // Проверяем, что первый элемент существует
+    public ProductsAssert verifyProductResponseStructureDTO(DTOProductResponse product) {
+        Assertions.assertThat(product)
+            .as("Продукт не должен быть null")
+            .isNotNull();
 
-        // Получаем список продуктов из ответа
-        List<Product> actualProducts = actual.jsonPath().getList(".", Product.class);
+        Assertions.assertThat(product)
+            .as("Продукт должен иметь все необходимые поля")
+            .hasFieldOrProperty("category")
+            .hasFieldOrProperty("discount")
+            .hasFieldOrProperty("id")
+            .hasFieldOrProperty("name")
+            .hasFieldOrProperty("price");
 
-        // Проверяем, что каждый элемент имеет нужные поля
-        Assertions.assertThat(actualProducts)
-            .as("Список продуктов не должен быть пустым")
-            .isNotEmpty()
-            .allSatisfy(product -> Assertions.assertThat(product)
-                .as("Продукт не соответствует структуре")
-                .isNotNull()
-                .hasFieldOrProperty("category")
-                .hasFieldOrProperty("discount")
-                .hasFieldOrProperty("id")
-                .hasFieldOrProperty("name")
-                .hasFieldOrProperty("price"));
+        // Проверка, что название продукта не пустое
+        Assertions.assertThat(product.getName())
+            .as("Название продукта не должно быть пустым")
+            .isNotBlank();
+
+        // Проверка, что цена продукта больше нуля
+        Assertions.assertThat(product.getPrice())
+            .as("Цена продукта должна быть больше нуля")
+            .isGreaterThan(0);
 
         return this;
     }
 
-    public ProductsAssert verifyIdProduct(int expectedId) {
-        List<Product> actualId = actual.jsonPath().getList(".", Product.class);
+    // Проверка структуры массива продуктов
+    public ProductsAssert verifyProductResponseStructureDTO(List<DTOProductResponse> products) {
+        // Проверяем, что список продуктов не пустой
+        Assertions.assertThat(products)
+            .as("Список продуктов не должен быть пустым")
+            .isNotEmpty();
 
-        BasicAssert.assertThat(actual).responseFieldIsEqual("id", expectedId);
+        // Проверяем каждый продукт в списке
+        for (DTOProductResponse product : products) {
+            verifyProductResponseStructureDTO(product);
+        }
+
+        return this;
+    }
+
+    // Проверка уникальности ID
+    public ProductsAssert verifyUniqueId(List<DTOProductResponse> products) {
+        List<Integer> productIds = products.stream()
+            .map(DTOProductResponse::getId)
+            .collect(Collectors.toList());
+
+        Assertions.assertThat(productIds)
+            .as("ID продуктов должны быть уникальными")
+            .doesNotHaveDuplicates();
+        return this;
+    }
+
+    // Проверка ID продукта
+    public ProductsAssert verifyIdProduct(DTOProductResponse product, int expectedId) {
+        Assertions.assertThat(product.getId())
+            .as("ID продукта должен совпадать с указанным в запросе")
+            .isEqualTo(expectedId);
+
         return this;
     }
 }
