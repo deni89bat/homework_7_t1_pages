@@ -1,6 +1,11 @@
 package dto.response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 //@Getter @Setter
+@Getter
+@Setter
 public class DTOProduct {
 
     String name;
@@ -9,47 +14,7 @@ public class DTOProduct {
 
     int id;
 
-    int price;
+    double price;
 
-    int discount;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(int discount) {
-        this.discount = discount;
-    }
+    double discount;
 }

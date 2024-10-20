@@ -40,8 +40,6 @@ public class ApiTests extends BasicApi {
 
         productsApi.respIdEqualReqId(response, productId);
 
-        //System.out.println("Список из ответа " + products.get(0));
-
         steps.verifyStatusCode(response, 200);
         productsApi.verifyProductResponseStructure(response);
 
