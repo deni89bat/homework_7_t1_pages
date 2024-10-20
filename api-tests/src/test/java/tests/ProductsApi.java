@@ -2,6 +2,7 @@ package tests;
 
 import assertions.BasicAssert;
 import assertions.ProductsAssert;
+import dto.request.DTOProduct;
 import endpoints.Urls;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
@@ -28,7 +29,7 @@ public class ProductsApi extends BasicApi {
     }
 
 
-    @Step("Отправить POST запрос на создание нового товара")
+/*    @Step("Отправить POST запрос на создание нового товара")
     public Response addNewProduct(String name, String category, double price, int discount) {
         return getBuilder().body("""
                 {
@@ -38,6 +39,14 @@ public class ProductsApi extends BasicApi {
                   "discount": %s
                 }
                 """.formatted(name, category, price, discount)).post(Urls.PRODUCTS)
+            .then().log().all().extract().response();
+    }*/
+
+    @Step("Отправить POST запрос на создание нового товара")
+    public Response addNewProduct(String name, String category, double price, double discount) {
+        return getBuilder()
+            .body(toJSON(new DTOProduct(name, category, price, discount)))
+            .post(Urls.PRODUCTS)
             .then().log().all().extract().response();
     }
 

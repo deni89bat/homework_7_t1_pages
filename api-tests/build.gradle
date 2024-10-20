@@ -4,8 +4,6 @@ dependencies {
     testImplementation "io.qameta.allure:allure-rest-assured:${allureRestAssuredVersion}"
     testImplementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
     testImplementation "org.aeonbits.owner:owner:${ownerVersion}"
-    testImplementation "org.projectlombok:lombok:${lombokVersion}" // Добавлено для Lombok
-    testImplementation "org.projectlombok:lombok:${lombokVersion}" //
 }
 
 

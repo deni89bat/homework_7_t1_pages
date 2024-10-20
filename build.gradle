@@ -13,7 +13,7 @@ ext {
     allureSelenideVersion = '2.29.0'
     assertjVersion = '3.26.3'
     ownerVersion = '1.0.10'
-    lombokVersion = '1.18.22'
+    lombokVersion = '1.18.30'
 }
 repositories {
     mavenCentral()
@@ -30,8 +30,11 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
         testImplementation "io.qameta.allure:allure-junit5:${allureJunit5Version}"
         testImplementation "org.assertj:assertj-core:${assertjVersion}"
-        testImplementation "org.projectlombok:lombok:${lombokVersion}" // Добавлено для Lombok
-        testImplementation "org.projectlombok:lombok:${lombokVersion}" // Добавлено для Lombok
+        testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
     }
 
 
