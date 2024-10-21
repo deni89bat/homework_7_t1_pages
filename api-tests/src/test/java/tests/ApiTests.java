@@ -9,9 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ApiTests extends BasicApi {
-
     TestSteps steps = new TestSteps();
     ProductsApi productsApi = new ProductsApi(token);
+
+
 
     @Test
     @DisplayName("[ GET /products ] Get a list of products")
@@ -26,7 +27,7 @@ public class ApiTests extends BasicApi {
 
     @Test
     @DisplayName("[ POST /products/{product_id} ] Add a new product")
-    void postAddNewProduct() {
+    void addNewProduct() {
         Response response = productsApi.addNewProduct("testProduct", "Electronics", 666, 7);
         steps.verifyStatusCode(response, 201);
         steps.verifyMessage(response, "Product added successfully");
@@ -55,7 +56,7 @@ public class ApiTests extends BasicApi {
 
     @Test
     @DisplayName("[ PUT /products/{product_id} ] Update information about a specific product")
-    void putProductById() {
+    void updateProductById() {
         int productId = 3;
         Response response = productsApi.putProduct(productId, "Updated Product Name", "Electronics",
             15.99, 8);
@@ -66,7 +67,7 @@ public class ApiTests extends BasicApi {
 
     @Test
     @DisplayName("[ DELETE /products/{product_id} ] Delete a specific product")
-    void deleteById() {
+    void deleteProductById() {
         // по идее сначала нужно создать продукт и из ответа уже взять ID для удаления
         int productId = 3;
         Response response = productsApi.deleteProduct(productId);

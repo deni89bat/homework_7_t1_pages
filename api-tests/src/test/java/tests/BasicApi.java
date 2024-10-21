@@ -9,6 +9,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import listner.CustomTpl;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeAll;
 import utils.RestApiBuilder;
@@ -24,7 +25,10 @@ public class BasicApi {
         RestAssured.baseURI = config.baseURI();
 
         if (config.loggingEnabled()) {
-            RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), new AllureRestAssured());
+            RestAssured.filters(new RequestLoggingFilter(),
+                new ResponseLoggingFilter(),
+                CustomTpl.customLogFilter()
+                    .withCustomTemplates());
         }
 
         token = getAuthToken();
