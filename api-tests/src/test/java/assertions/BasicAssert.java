@@ -54,12 +54,4 @@ public class BasicAssert extends AbstractAssert<BasicAssert, Response> {
 
         return this;
     }
-
-/*    public BasicAssert responseFieldIsEqual(String path, Object value) {
-        Assertions.assertThat(actual.jsonPath().getObject(path, Object.class))
-            .as("Поле '%s' не равно ожидаемому значению".formatted(path))
-            .isEqualTo(value);
-
-        return this;
-    }*/
 }

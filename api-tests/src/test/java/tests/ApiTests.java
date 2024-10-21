@@ -4,114 +4,66 @@ package tests;
 import assertions.BasicAssert;
 import dto.request.DTOUserRequest;
 import dto.response.DTOProductResponse;
+import dto.response.DTOUserCartResponse;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
 import java.util.List;
-import java.util.Random;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import services.AuthService;
 
 public class ApiTests extends BasicApi {
 
     TestSteps steps = new TestSteps();
     ProductsApi productsApi = new ProductsApi(token);
-    Random random = BasicApi.random;
+    CartApi cartApi = new CartApi(token);
 
+    //User registration and login tests
     @Test
     @DisplayName("[ POST /register ] Register a new user")
     void positiveRegisterNewUserTest() {
-        int randomNumber = Math.abs(random.nextInt());
-
-        DTOUserRequest user = DTOUserRequest.builder()
-            .username("batTestUser" + randomNumber)
-            .password("batTestPass")
-            .build();
-
-        Response response = AuthApi.registerNewUser(user.getUsername(), user.getPassword());
-        steps.verifyStatusCode(response, 201);
-        steps.verifyMessage(response, "User registered successfully");
+        AuthService.createAndRegisterNewUser();
     }
 
     @Test
     @DisplayName("[ POST /register Negative - 'User already exists' ] Register a new user")
     void negativeRegisterLoginExistsTest() {
-        int randomNumber = Math.abs(random.nextInt());
-
-        DTOUserRequest user = DTOUserRequest.builder()
-            .username("batTestUser" + randomNumber)
-            .password("batTestPass")
-            .build();
-
-        Response response = AuthApi.registerNewUser(user.getUsername(), user.getPassword());
-        steps.verifyStatusCode(response, 201);
-        steps.verifyMessage(response, "User registered successfully");
-
-        Response responseLoginExists = AuthApi.registerNewUser(user.getUsername(),
-            user.getPassword());
-        steps.verifyStatusCode(responseLoginExists, 400);
-        steps.verifyMessage(responseLoginExists, "User already exists");
+        DTOUserRequest user = AuthService.createAndRegisterNewUser();
+        // Повторная попытка регистрации с тем же пользователем
+        AuthService.registerUserAndVerify(user, 400, "User already exists");
     }
 
     @Test
     @DisplayName("[ POST /register Negative - 'No password' ] Register a new user")
     void negativeRegisterNoPasswordTest() {
-        int randomNumber = Math.abs(random.nextInt());
-
-        DTOUserRequest user = DTOUserRequest.builder()
-            .username("batTestUser" + randomNumber)
-            .build();
-
-        Response response = AuthApi.registerNewUser(user.getUsername(), user.getPassword());
-        steps.verifyStatusCode(response, 400);
-        steps.verifyMessage(response, "Username and password are required");
+        DTOUserRequest user = DTOUserRequest.getUserWithoutPassword();
+        AuthService.registerUserAndVerify(user, 400, "Username and password are required");
     }
 
     @Test
     @DisplayName("[ POST /register Negative - 'No username' ] Register a new user")
     void negativeRegisterNoUserNameTest() {
-        DTOUserRequest user = DTOUserRequest.builder()
-            .password("batTestUser")
-            .build();
-
-        Response response = AuthApi.registerNewUser(user.getUsername(), user.getPassword());
-        steps.verifyStatusCode(response, 400);
-        steps.verifyMessage(response, "Username and password are required");
+        DTOUserRequest user = DTOUserRequest.getUserWithoutUsername();
+        AuthService.registerUserAndVerify(user, 400, "Username and password are required");
     }
 
     @Test
     @DisplayName("[ POST /login ] Log in with username and password")
     void positiveNewUserAuthTest() {
-        int randomNumber = Math.abs(random.nextInt());
-
-        DTOUserRequest user = DTOUserRequest.builder()
-            .username("batTestUser" + randomNumber)
-            .password("batTestPass")
-            .build();
-        Response registerNewUser = AuthApi.registerNewUser(user.getUsername(), user.getPassword());
-        steps.verifyStatusCode(registerNewUser, 201);
-        steps.verifyMessage(registerNewUser, "User registered successfully");
-
-        Response loginResponse = AuthApi.loginUser(user.getUsername(), user.getPassword());
-        String token = loginResponse.then().extract().jsonPath().getString("access_token");
-
-        steps.verifyStatusCode(loginResponse, 200);
-        BasicAssert.assertThat (loginResponse).responseContainField("access_token");
-        Assertions.assertThat(token).isNotNull();
-
+        DTOUserRequest user = AuthService.createAndRegisterNewUser();
+        Response loginResponse = AuthService.loginUser(user);
+        AuthService.verifyLoginResponse(loginResponse);
     }
+
     @Test
     @DisplayName("[ POST /login Negative - 'Invalid credentials' ] Log in with wrong username and password")
     void negativeUserAuthTest() {
         Response loginResponse = AuthApi.loginUser("abracadabra", "abracadabrapassword");
-        String token = loginResponse.then().extract().jsonPath().getString("access_token");
-
-        steps.verifyStatusCode(loginResponse, 401);
-        steps.verifyMessage(loginResponse,"Invalid credentials");
-
+        steps.verifyCodeAndMessage(loginResponse, 401, "Invalid credentials");
     }
 
-
+    //Product related operations tests
     @Test
     @DisplayName("[ GET /products ] Get a list of products")
     void getListProducts() {
@@ -172,6 +124,24 @@ public class ApiTests extends BasicApi {
         steps.verifyStatusCode(response, 200);
         steps.verifyMessage(response, "Product deleted successfully");
     }
+
+    @Test
+    @DisplayName("[ GET /cart ] Get the user's shopping cart")
+    void getUserCart() {
+        Response response = cartApi.getUserCart();
+        DTOUserCartResponse cart = response.as(new TypeRef<DTOUserCartResponse>() {
+        });
+        System.out.println("Получили дтошку " + cart.toString());
+        steps.verifyStatusCode(response, 200);
+    }
+
+    @Test
+    @DisplayName("[ POST /cart ] Add a product to the user's shopping cart")
+    void addProductToCart() {
+        Response response = cartApi.addProductToCart(4, 2);
+        steps.verifyStatusCode(response, 201);
+    }
+
 
 }
 
