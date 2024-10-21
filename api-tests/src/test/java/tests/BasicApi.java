@@ -9,6 +9,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.util.Random;
 import listner.CustomTpl;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,6 +19,7 @@ public class BasicApi {
 
     public static APIConfig config;
     protected static String token;
+    public static Random random;
 
     @BeforeAll
     static void setUp() {
@@ -32,6 +34,7 @@ public class BasicApi {
         }
 
         token = getAuthToken();
+        random  = new Random();
     }
 
     static String getAuthToken() {
