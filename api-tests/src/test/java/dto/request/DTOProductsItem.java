@@ -1,4 +1,4 @@
-package dto.response;
+package dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,13 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DTOCartItem {
+public class DTOProductsItem {
 
-    private int id;
     private String name;
     private String category;
     private double price;
     private double discount;
-    //!private int quantity;
-
 }

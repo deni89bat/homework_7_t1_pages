@@ -60,13 +60,13 @@ public class BasicApi {
         }
     }
 
-    public RequestSpecification getBuilder() {
+    public static RequestSpecification getBuilder() {
         return new RestApiBuilder(config.baseURI())
             .addAuth(token)
             .build().accept("application/json");
     }
 
-    public RequestSpecification getBuilderWithoutAuth() {
+    public static RequestSpecification getBuilderWithoutAuth() {
         return new RestApiBuilder("http://9b142cdd34e.vps.myjino.ru:49268")
             .build();
     }

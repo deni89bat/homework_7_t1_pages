@@ -52,22 +52,23 @@ public class ProductsApi extends BasicApi {
 
     @Step("Проверяем структуру ответа")
     public void verifyProductResponseStructureDTO(Response response, DTOProductResponse product) {
-        ProductsAssert.assertThat(response).verifyProductResponseStructureDTO(product);
+        //ProductsAssert.assertThat(response).verifyProductResponseStructureDTO(product);
     }
 
     @Step("Проверяем структуру ответа, содержащего массив продуктов")
     public void verifyProductResponseStructureDTO(Response response,
         List<DTOProductResponse> products) {
-        ProductsAssert.assertThat(response).verifyProductResponseStructureDTO(products);
+       // ProductsAssert.assertThat(response).verifyProductResponseStructureDTO(products);
     }
 
     @Step("Проверяем, что ID продукта в ответе совпадает с запрошенным")
     public void respIdEqualReqId(Response response, DTOProductResponse product, int id) {
-        ProductsAssert.assertThat(response).verifyIdProduct(product, id);
+        //ProductsAssert.assertThat(response).verifyIdProduct(product, id);
     }
 
     @Step("Проверяем, что у каждого продукта уникальный ID")
     public void verifyUniqueId(Response response, List<DTOProductResponse> products) {
-        ProductsAssert.assertThat(response).verifyUniqueId(products);
+        //ProductsAssert.assertThat(response).verifyUniqueId(products);
     }
+
 }

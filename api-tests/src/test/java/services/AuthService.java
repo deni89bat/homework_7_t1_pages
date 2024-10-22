@@ -1,10 +1,8 @@
 package services;
 
-import assertions.BasicAssert;
 import dto.request.DTOUserRequest;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import tests.BasicApi;
 import tests.TestSteps;
 import utils.RestApiBuilder;

@@ -3,23 +3,17 @@ package dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DTOProductResponse {
+public class DTOProductsItem {
+	private String category;
+	private double discount;
+	private int id;
+	private String name;
+	private double price;
 
-    String name;
-
-    String category;
-
-    int id;
-
-    double price;
-
-    double discount;
 }
