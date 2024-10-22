@@ -26,7 +26,7 @@ public class CheckboxesPageAssert extends AbstractAssert<CheckboxesPageAssert, C
     }
 
     @Step("Проверяем, что заголовок страницы содержит текст 'Checkboxes'")
-    public CheckboxesPageAssert checkboxesTitleText() {
+    public CheckboxesPageAssert validateCheckboxesTitleText() {
         actual.pageTitle.shouldHave(Condition.text("Checkboxes"));
         return this;
     }
