@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DTOAddToCartRequest{
-	private int product_id;
-	private int quantity;
+public class DTOAddToCartRequest {
+
+    private int product_id;
+    private int quantity;
 }

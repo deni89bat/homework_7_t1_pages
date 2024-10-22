@@ -8,6 +8,7 @@ import tests.TestSteps;
 import utils.RestApiBuilder;
 
 public class AuthService extends BasicApi {
+
     static TestSteps steps = new TestSteps();
 
     @Step("Отправить POST запрос на создание нового пользователя")
@@ -24,9 +25,10 @@ public class AuthService extends BasicApi {
             .post(config.loginEndpoint());
     }
 
-    public static void registerUserAndVerify(DTOUserRequest user, int expectedStatusCode, String expectedMessage) {
+    public static void registerUserAndVerify(DTOUserRequest user, int expectedStatusCode,
+        String expectedMessage) {
         Response response = registerNewUser(user);
-        steps.verifyCodeAndMessage(response,expectedStatusCode,expectedMessage);
+        steps.verifyCodeAndMessage(response, expectedStatusCode, expectedMessage);
     }
 
     public static DTOUserRequest createAndRegisterNewUser() {

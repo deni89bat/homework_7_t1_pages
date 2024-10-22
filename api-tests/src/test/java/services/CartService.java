@@ -9,6 +9,7 @@ import tests.BasicApi;
 import tests.TestSteps;
 
 public class CartService extends BasicApi {
+
     static TestSteps steps = new TestSteps();
 
     @Step("Отправить запрос на получение корзины пользователя")
@@ -28,8 +29,6 @@ public class CartService extends BasicApi {
         steps.verifyStatusCode(response, 200);
         return response.as(DTOUserCartResponse.class);
     }
-
-
 
 
     @Step("Отправить запрос на добавления продукта в корзину пользователя")
@@ -80,14 +79,16 @@ public class CartService extends BasicApi {
     }
 
     @Step("Проверить, что в корзине есть добавленный продукт")
-    public static void verifyAddedProductInCart(DTOUserCartResponse cart, int productId, int expectedQuantity) {
+    public static void verifyAddedProductInCart(DTOUserCartResponse cart, int productId,
+        int expectedQuantity) {
         Assertions.assertThat(cart.getCart()).as("В корзине нет добавленного продукта")
             .isNotEmpty()  // Проверка, что список товаров в корзине не пуст
             .anySatisfy(item -> {
                 Assertions.assertThat(item.getId())
                     .isEqualTo(productId);  // Проверяем, что ID продукта соответствует ожидаемому
                 Assertions.assertThat(item.getQuantity())
-                    .isEqualTo(expectedQuantity);  // Проверяем, что количество соответствует ожидаемому
+                    .isEqualTo(
+                        expectedQuantity);  // Проверяем, что количество соответствует ожидаемому
             });
     }
 

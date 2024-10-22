@@ -8,12 +8,6 @@ public interface APIConfig extends Config {
     @DefaultValue("http://9b142cdd34e.vps.myjino.ru:49268")
     String baseURI();
 
-
-//    public static final String REGISTER = "/register";
-//    public static final String LOGIN = "/login";
-//    public static final String PRODUCTS = "/products";
-//    public static final String CART = "/cart";
-
     @Key("endpoints.register")
     @DefaultValue("/register")
     String registerEndpoint();
@@ -29,8 +23,6 @@ public interface APIConfig extends Config {
     @Key("endpoints.cart")
     @DefaultValue("/cart")
     String cartEndpoint();
-
-
 
 
     @Key("logging.enabled")

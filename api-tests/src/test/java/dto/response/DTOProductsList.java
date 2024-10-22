@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DTOProductsList {
-	private List<DTOProductsItem> dtoProductsItemsList;
+
+    private List<DTOProductsItem> dtoProductsItemsList;
 }

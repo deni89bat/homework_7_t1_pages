@@ -19,8 +19,8 @@ public class TestSteps {
     }
 
     public void verifyCodeAndMessage(Response response, int expectedStatusCode, String msg) {
-        verifyStatusCode(response,expectedStatusCode);
-        verifyMessage(response,msg);
+        verifyStatusCode(response, expectedStatusCode);
+        verifyMessage(response, msg);
     }
 
     @Step("Проверка получения токена")

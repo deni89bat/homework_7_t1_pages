@@ -30,7 +30,7 @@ public class RestApiBuilder {
 
     public RestApiBuilder addAuth(String token) {
         //requestSpecification.auth().oauth2(token); можно использовать такую авторизацию, но тогда заголовок не отображается в отчёте
-        requestSpecification.header("Authorization","Bearer " + token);
+        requestSpecification.header("Authorization", "Bearer " + token);
         return this;
     }
 

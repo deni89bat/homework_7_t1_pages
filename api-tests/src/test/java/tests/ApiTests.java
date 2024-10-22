@@ -147,8 +147,6 @@ public class ApiTests extends BasicApi {
         Assertions.assertThat(quantityAfterDelete).isEqualTo(quantity - 1);
 
     }
-
-
 }
 
 

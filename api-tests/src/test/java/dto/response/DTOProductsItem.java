@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class DTOProductsItem {
-	private String category;
-	private double discount;
-	private int id;
-	private String name;
-	private double price;
+
+    private String category;
+    private double discount;
+    private int id;
+    private String name;
+    private double price;
 
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DTOUserRequest {
+
     private String username;
     private String password;
 
@@ -31,14 +32,6 @@ public class DTOUserRequest {
     public static DTOUserRequest getRandomUser() {
         return createUser("batTestUser" + generateRandomNumber(), "batTestPass");
     }
-
-/*    public static DTOUserRequest getRandomUser() {
-        int randomNumber = generateRandomNumber();
-        return DTOUserRequest.builder()
-            .username("batTestUser" + randomNumber)
-            .password("batTestPass")
-            .build();
-    }*/
 
     // Метод для негативных тестов (например, без пароля)
     public static DTOUserRequest getUserWithoutPassword() {

@@ -3,6 +3,7 @@ package tests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.APIConfig;
+import dto.request.DTOUserRequest;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -18,8 +19,8 @@ import utils.RestApiBuilder;
 public class BasicApi {
 
     public static APIConfig config;
-    protected static String token;
     public static Random random;
+    protected static String token;
 
     @BeforeAll
     static void setUp() {
@@ -34,11 +35,11 @@ public class BasicApi {
         }
 
         token = AuthService.createAndAuthenticateNewUser();
-        random  = new Random();
+        random = new Random();
     }
 
     static String getAuthToken() {
-        String access_token = AuthApi.loginUser("bat666888", "pass8888").jsonPath()
+        String access_token = AuthService.loginUser(DTOUserRequest.getRandomUser()).jsonPath()
             .getString("access_token");
         System.out.println("access_token: " + access_token);
         return access_token;

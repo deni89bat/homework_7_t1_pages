@@ -1,11 +1,8 @@
 package assertions;
 
-import dto.response.DTOProductResponse;
 import dto.response.DTOProductsItem;
-import dto.response.DTOProductsList;
 import io.restassured.response.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.platform.commons.util.StringUtils;
@@ -65,20 +62,6 @@ public class ProductsAssert extends AbstractAssert<ProductsAssert, Response> {
         return this;
     }
 
-    /*    // Проверка уникальности ID
-        public ProductsAssert verifyUniqueId(List<DTOProductResponse> products) {
-            List<Integer> productIds = products.stream()
-                .map(DTOProductResponse::getId)
-                .collect(Collectors.toList());
-
-            Assertions.assertThat(productIds)
-                .as("ID продуктов должны быть уникальными")
-                .doesNotHaveDuplicates();
-            return this;
-        }
-
-      */
-// Проверка ID продукта
     public ProductsAssert verifyIdProduct(DTOProductsItem product, int expectedId) {
         Assertions.assertThat(product.getId())
             .as("ID продукта должен совпадать с указанным в запросе")

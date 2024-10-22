@@ -1,8 +1,6 @@
 package services;
 
 import assertions.ProductsAssert;
-import dto.request.DTOProductRequest;
-import dto.response.DTOProductResponse;
 import dto.response.DTOProductsItem;
 import dto.response.DTOProductsList;
 import io.qameta.allure.Step;
@@ -31,10 +29,10 @@ public class ProductsService extends BasicApi {
     public static DTOProductsList getProductByRandomId() {
         int randomId = getRandomProductId();
         Response response = getBuilder().get(config.productsEndpoint() + "/%s".formatted(randomId));
-        steps.verifyStatusCode(response,200);
+        steps.verifyStatusCode(response, 200);
         List<DTOProductsItem> product = Arrays.asList(response.as(DTOProductsItem[].class));
         verifyProductResponseStructureDTO(response, product);
-        respIdEqualReqId(response,product.get(0),randomId);
+        respIdEqualReqId(response, product.get(0), randomId);
         return DTOProductsList.builder()
             .dtoProductsItemsList(product)
             .build();
@@ -57,7 +55,7 @@ public class ProductsService extends BasicApi {
     public static Response putProduct() {
         int randomId = getRandomProductId();
         return getBuilder()
-            .body(toJSON(new DTOProductRequest("Updated Product Name",  "Electronics", 15.99, 8)))
+            .body(toJSON(new dto.request.DTOProductsItem("Updated Product Name", "Electronics", 15.99, 8)))
             .put(config.productsEndpoint() + "/%s".formatted(randomId));
     }
 
@@ -82,7 +80,7 @@ public class ProductsService extends BasicApi {
     private static int getRandomProductId() {
         DTOProductsList products = getProductsWithoutAuth();
         Random random = new Random();
-        return random.nextInt(1,products.getDtoProductsItemsList().size() + 1);
+        return random.nextInt(1, products.getDtoProductsItemsList().size() + 1);
     }
 
 }
