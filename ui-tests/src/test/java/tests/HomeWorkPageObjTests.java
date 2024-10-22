@@ -1,13 +1,11 @@
 package tests;
 
-import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
 import static io.qameta.allure.Allure.addAttachment;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Screenshots;
-import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Description;
@@ -16,24 +14,17 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import pages.CheckboxesPage;
 
-public class HomeWork7PageObjTests extends BasicTest {
+public class HomeWorkPageObjTests extends BasicTest {
     TestSteps steps = new TestSteps();
     // Регистрация расширения для создания скриншотов
     @RegisterExtension
@@ -68,15 +59,15 @@ public class HomeWork7PageObjTests extends BasicTest {
         checkboxesPage.verifyPageTitle();
 
         if (Objects.equals(order, "ascOrder")) {
-            checkboxesPage.setCheckboxWithVerification(checkboxesPage.checkbox1);
-            checkboxesPage.setCheckboxWithVerification(checkboxesPage.checkbox2);
+            checkboxesPage.setCheckboxWithVerification(1);
+            checkboxesPage.setCheckboxWithVerification(2);
         } else {
-            checkboxesPage.setCheckboxWithVerification(checkboxesPage.checkbox1);
-            checkboxesPage.setCheckboxWithVerification(checkboxesPage.checkbox2);
+            checkboxesPage.setCheckboxWithVerification(1);
+            checkboxesPage.setCheckboxWithVerification(2);
         }
 
-        checkboxesPage.printCheckedAttribute(checkboxesPage.checkbox1, "checkbox 1");
-        checkboxesPage.printCheckedAttribute(checkboxesPage.checkbox2, "checkbox 2");
+        //checkboxesPage.printCheckedAttribute(checkboxesPage.checkbox1, "checkbox 1");
+        //checkboxesPage.printCheckedAttribute(checkboxesPage.checkbox2, "checkbox 2");
     }
 
 

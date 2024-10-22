@@ -11,25 +11,28 @@ import io.qameta.allure.Step;
 
 public class CheckboxesPage {
     SelenideElement checkboxLocator =$x("//form[@id='checkboxes']/input") ;
-    public SelenideElement checkbox1 =$(getBuilder().formCheckboxes().withIndex(1).build());
-    public SelenideElement checkbox2 =$(getBuilder().formCheckboxes().withIndex(2).build());
+    SelenideElement checkbox1 =$(getBuilder().formCheckboxes().withIndex(1).build());
+    SelenideElement checkbox2 =$(getBuilder().formCheckboxes().withIndex(2).build());
     SelenideElement pageTitle = $x("//h3");
 
     public CheckboxesPageAssert check() {
             return CheckboxesPageAssert.assertThat(this);
         }
 
-        @Step("Нажать на кнопку 'Checkboxes'")
-        public pages.CheckboxesPage clickCheckboxesButton() {
-            checkbox1.shouldBe(Condition.visible).click();
+        @Step("Нажать на checkbox {id}")
+        public CheckboxesPage clickCheckbox(int id) {
+            SelenideElement checkbox = getCheckboxByIndex(id);
+            checkbox.shouldBe(Condition.visible).click();
             return this;
         }
 
     @Step("Кликнуть на чекбокс и проверить его состояние.")
-    public void setCheckboxWithVerification(SelenideElement checkbox) {
+    public void setCheckboxWithVerification(int id) {
+        SelenideElement checkbox = getCheckboxByIndex(id);
         boolean isCheckedBeforeClick = checkbox.isSelected();
 
-        checkbox.click();
+        clickCheckbox(id);
+
         if (isCheckedBeforeClick) {
             checkbox.shouldNotBe(Condition.checked);
         } else {
