@@ -4,10 +4,11 @@ import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import org.assertj.core.api.AbstractAssert;
 
-public class InternetMainPageAssert extends AbstractAssert<InternetMainPageAssert, InternetMainPage> {
+public class InternetMainPageAssert extends
+    AbstractAssert<InternetMainPageAssert, InternetMainPage> {
 
     public InternetMainPageAssert(InternetMainPage actual) {
-        super(actual, InternetMainPage.class);
+        super(actual, InternetMainPageAssert.class);
     }
 
     public static InternetMainPageAssert assertThat(InternetMainPage actual) {
@@ -18,7 +19,7 @@ public class InternetMainPageAssert extends AbstractAssert<InternetMainPageAsser
         return actual;
     }
 
-    @Step("Пользователь видити кнопку 'Checkboxes'")
+    @Step("Пользователь видит кнопку 'Checkboxes'")
     public InternetMainPageAssert checkboxesButtonIsVisible() {
         actual.checkboxesButton.shouldBe(Condition.visible);
         return this;
@@ -26,7 +27,7 @@ public class InternetMainPageAssert extends AbstractAssert<InternetMainPageAsser
 
     @Step("Пользователь видит, что кнопка 'Checkboxes' выбрана")
     public InternetMainPageAssert checkboxesButtonIsSelected() {
-        actual.checkboxesButton.should(Condition.attribute("checked","true"));
+        actual.checkboxesButton.should(Condition.attribute("checked", "true"));
         return this;
     }
 

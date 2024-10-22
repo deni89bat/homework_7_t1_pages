@@ -1,20 +1,20 @@
 package tests;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.$$x;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.sleep;
+import static com.codeborne.selenide.WebDriverRunner.url;
+
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-
 import java.util.Random;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$$x;
-import static com.codeborne.selenide.WebDriverRunner.url;
-import static org.junit.jupiter.api.Assertions.fail;
-
 public class TestSteps {
+
     @Step("Перейти на страницу {buttonName}")
     public void clickLink(SelenideElement buttonElement, String buttonName) {
         buttonElement.click();
@@ -34,11 +34,13 @@ public class TestSteps {
 
     @Step("Вывести в консоль значение атрибута checked для {checkboxName}.")
     public void printCheckedAttribute(SelenideElement checkbox, String checkboxName) {
-        System.out.println("Значение атрибута checked для " + checkboxName + ": " + checkbox.getAttribute("checked"));
+        System.out.println(
+            "Значение атрибута checked для " + checkboxName + ": " + checkbox.getAttribute(
+                "checked"));
     }
 
     @Step("Выбрать опцию, вывести в консоль текущий текст элемента dropdown. " +
-            "Проверка корректного состояние каждого dropDown после каждого нажатия на него. ")
+        "Проверка корректного состояние каждого dropDown после каждого нажатия на него. ")
     public void selectOption(SelenideElement dropdownElement, int optionNumber) {
         dropdownElement.selectOption(optionNumber);
         String selectedText = dropdownElement.getText();
@@ -47,7 +49,9 @@ public class TestSteps {
         dropdownElement.shouldHave(text(selectedText));
     }
 
-    @Step("Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой. " +
+    @Step(
+        "Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой. "
+            +
             "Для каждого обновления страницы проверяем наличие 5 элементов.")
     public void check5Elements() {
         ElementsCollection disappearingElementsList = $$x("//li/a");
@@ -59,7 +63,8 @@ public class TestSteps {
     }
 
 
-    @Step("Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input." +
+    @Step(
+        "Ввести любое случайное число от 1 до 10 000. Вывести в консоль значение элемента Input." +
             "Проверить, что в поле ввода отображается именно то число, которое было введено.")
     public void enterRandomNumberInInput(SelenideElement inputField) {
         int randomNumber = (int) (Math.random() * 10000) + 1;
@@ -91,11 +96,12 @@ public class TestSteps {
         caption.shouldBe(Condition.visible);
         caption.shouldHave(Condition.text(expectedText));
 
-        System.out.println("Текст, появившийся при наведении на изображение " + imageIndex + ":  \n" + caption.getText());
+        System.out.println("Текст, появившийся при наведении на изображение " + imageIndex + ":  \n"
+            + caption.getText());
     }
 
     @Step("Проверяем, что всплывающее уведомление Successfull. " +
-            "Если нет - то закрываем всплывающее уведомление и кликаем кнопку Click Here, повторно проверяем всплывающее уведомление Successfull.")
+        "Если нет - то закрываем всплывающее уведомление и кликаем кнопку Click Here, повторно проверяем всплывающее уведомление Successfull.")
     public void checkNotification() {
         SelenideElement clickHereButton = $x("//a[text()='Click here']");
         SelenideElement notificationMessage = $x("//div[@id='flash']");
@@ -138,7 +144,8 @@ public class TestSteps {
             int countOfDeleteButtons = elementsCollection.size();
             if (elementsCollection.isEmpty()) {
                 System.out.println("Нет больше кнопок Delete для удаления.");
-                elementsCollection.shouldHave(CollectionCondition.sizeGreaterThanOrEqual(count - i + 1));
+                elementsCollection.shouldHave(
+                    CollectionCondition.sizeGreaterThanOrEqual(count - i + 1));
             }
             int randomIndex = random.nextInt(elementsCollection.size());
             elementsCollection.get(randomIndex).click();

@@ -2,12 +2,19 @@ package tests;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.open;
+import static io.qameta.allure.Allure.addAttachment;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Screenshots;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import pages.InternetMainPage;
 
@@ -15,29 +22,43 @@ public class BasicTest {
 
     protected InternetMainPage internetMainPage = new InternetMainPage();
 
-    @BeforeEach
-    @Step("Открыть страницу 'https://the-internet.herokuapp.com/'")
-    void openMainPage() {
-        open("https://the-internet.herokuapp.com/");
-        Configuration.timeout = 10000;
+    @BeforeAll
+    public static void setUp() {
+        Configuration.browser = "chrome";
+        Configuration.pageLoadStrategy = "eager";
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-            .screenshots(true)
+            .screenshots(true)  // Записывать скриншоты
             .savePageSource(true));
     }
 
     @BeforeEach
-    @Step("Войти в систему")
-    void loginSystem() {
-        startMethod();
+    @Step("Открыть страницу 'https://the-internet.herokuapp.com/'")
+    void openMainPage() {
+        open("https://the-internet.herokuapp.com/");
+    }
+
+    // Метод для добавления скриншота в отчет Allure
+    public void attachScreenshot() {
+        File screenshotFile = Screenshots.takeScreenShotAsFile();
+        if (screenshotFile != null) {
+            try {
+                byte[] screenshotBytes = Files.readAllBytes(screenshotFile.toPath());
+                addAttachment("Финальный скриншот", "image/png",
+                    new ByteArrayInputStream(screenshotBytes), "png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Скриншот не был создан, так как screenshotFile равен null.");
+        }
     }
 
     @AfterEach
-    @Step("Закрыть драйвер")
-    void tearDown() {
+    @Step("Сделать скриншот и закрыть драйвер")
+    void teardown() {
+        attachScreenshot();
         closeWebDriver();
     }
 
-    void startMethod() {
-        System.out.println("Вошли в систему");
-    }
+
 }

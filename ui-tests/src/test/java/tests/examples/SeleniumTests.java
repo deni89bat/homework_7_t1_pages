@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 @Disabled
 public class SeleniumTests {
+
     WebDriver wd;
 
     @BeforeEach

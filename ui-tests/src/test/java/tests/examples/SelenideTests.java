@@ -1,15 +1,19 @@
 package tests.examples;
 
-import com.codeborne.selenide.*;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.open;
+
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.*;
-
 @Disabled
 public class SelenideTests {
+
     SelenideElement infiniteScrollBtn = $x("//a[@href='/infinite_scroll']");
     SelenideElement pageTitle = $x("//h3");
 

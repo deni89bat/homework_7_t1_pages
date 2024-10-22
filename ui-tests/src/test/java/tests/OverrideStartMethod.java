@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class OverrideStartMethod extends BasicTest {
+
     @Test
     @DisplayName("ТК который перезаписывает")
     void test() {
@@ -11,8 +12,8 @@ public class OverrideStartMethod extends BasicTest {
         System.out.println("DoNotOverride");
     }
 
-    @Override
+/*    @Override
     void startMethod() {
         System.out.println("Не входить в систему");
-    }
+    }*/
 }

@@ -8,7 +8,7 @@ import org.assertj.core.api.AbstractAssert;
 public class CheckboxesPageAssert extends AbstractAssert<CheckboxesPageAssert, CheckboxesPage> {
 
     public CheckboxesPageAssert(CheckboxesPage actual) {
-        super(actual, CheckboxesPage.class);
+        super(actual, CheckboxesPageAssert.class);
     }
 
     public static CheckboxesPageAssert assertThat(CheckboxesPage actual) {
@@ -25,10 +25,23 @@ public class CheckboxesPageAssert extends AbstractAssert<CheckboxesPageAssert, C
         return this;
     }
 
-    @Step("Проверить, что чекбокс {checkboxIndex} видим")
+    @Step("Проверяем, что заголовок страницы содержит текст 'Checkboxes'")
+    public CheckboxesPageAssert checkboxesTitleText() {
+        actual.pageTitle.shouldHave(Condition.text("Checkboxes"));
+        return this;
+    }
+
+    @Step("Пользователь видит checkbox {checkboxIndex}")
     public CheckboxesPageAssert checkboxIsVisible(int checkboxIndex) {
         SelenideElement checkbox = actual.getCheckboxByIndex(checkboxIndex);
         checkbox.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Пользователь видит, что текст чекбокса {checkboxIndex} равен '{expectedText}'")
+    public CheckboxesPageAssert checkboxHasText(int checkboxIndex, String expectedText) {
+        SelenideElement checkbox = actual.getCheckboxByIndex(checkboxIndex);
+        checkbox.parent().shouldHave(Condition.text(expectedText));
         return this;
     }
 
@@ -40,6 +53,20 @@ public class CheckboxesPageAssert extends AbstractAssert<CheckboxesPageAssert, C
         } else {
             checkbox.shouldNotBe(Condition.checked);
         }
+        return this;
+    }
+
+    @Step("Проверить, что чекбокс {checkboxIndex} изменил свое состояние после клика")
+    public CheckboxesPageAssert verifyCheckboxState(int checkboxIndex,
+        boolean wasCheckedBeforeClick) {
+        SelenideElement checkbox = actual.getCheckboxByIndex(checkboxIndex);
+
+        if (wasCheckedBeforeClick) {
+            checkbox.shouldNotBe(Condition.checked);
+        } else {
+            checkbox.shouldBe(Condition.checked);
+        }
+
         return this;
     }
 

@@ -1,16 +1,17 @@
 package tests.examples;
 
-import com.codeborne.selenide.*;
+import static com.codeborne.selenide.Selenide.$$x;
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runners.Parameterized;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.*;
 
 @Disabled
 public class SelenideCollectionsTests {
@@ -35,7 +36,7 @@ public class SelenideCollectionsTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"String1", "String2"} )
+    @ValueSource(strings = {"String1", "String2"})
     void paramTest(String param) {
         System.out.println(param);
     }

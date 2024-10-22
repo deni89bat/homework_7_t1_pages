@@ -1,12 +1,9 @@
 package pages;
 
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
-import static utils.LocatorBuilder.getBuilder;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebElementCondition;
 import io.qameta.allure.Step;
 
 public class InternetMainPage {
