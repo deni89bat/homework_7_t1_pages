@@ -57,7 +57,12 @@ public class HomeWorkPageObjTests extends BasicTest {
         internetMainPage.clickDropdownButton();
         DropdownPage dropdownPage = new DropdownPage();
 
-        dropdownPage.selectOption(1)
+        dropdownPage.check()
+            .pageTitleIsVisible()
+            .pageTitleIsVisible("Dropdown List")
+            .page()
+
+            .selectOption(1)
             .logSelectedOption()
             .check()
             .optionIsSelected("Option 1")
