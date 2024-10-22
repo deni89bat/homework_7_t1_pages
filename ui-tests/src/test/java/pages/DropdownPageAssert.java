@@ -25,7 +25,7 @@ public class DropdownPageAssert extends AbstractAssert<DropdownPageAssert, Dropd
     }
 
     @Step("Проверить, что заголовок содержит текст '{expectedText}'")
-    public DropdownPageAssert pageTitleIsVisible(String expectedText) {
+    public DropdownPageAssert validateTitleText(String expectedText) {
         actual.pageTitle.shouldHave(Condition.text(expectedText));
         return this;
     }

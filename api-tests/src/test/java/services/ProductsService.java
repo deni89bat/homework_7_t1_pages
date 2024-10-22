@@ -55,7 +55,8 @@ public class ProductsService extends BasicApi {
     public static Response putProduct() {
         int randomId = getRandomProductId();
         return getBuilder()
-            .body(toJSON(new dto.request.DTOProductsItem("Updated Product Name", "Electronics", 15.99, 8)))
+            .body(toJSON(
+                new dto.request.DTOProductsItem("Updated Product Name", "Electronics", 15.99, 8)))
             .put(config.productsEndpoint() + "/%s".formatted(randomId));
     }
 

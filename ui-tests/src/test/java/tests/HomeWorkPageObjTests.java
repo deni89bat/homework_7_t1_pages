@@ -1,18 +1,17 @@
 package tests;
 
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.sleep;
-import static io.qameta.allure.Allure.addAttachment;
-
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import pages.CheckboxesPage;
+import pages.DisappearingElementsPage;
 import pages.DropdownPage;
 
 public class HomeWorkPageObjTests extends BasicTest {
@@ -31,7 +30,6 @@ public class HomeWorkPageObjTests extends BasicTest {
         Проверять корректное состояние каждого чекбокса после каждого нажатия на него. Запустить тест с помощью @ParametrizedTest, изменяя порядок нажатия на чекбоксы с помощью одного параметра.""")
     public void checkboxesTest(String order) {
         internetMainPage.clickCheckboxesButton();
-
         CheckboxesPage checkboxesPage = new CheckboxesPage();
 
         checkboxesPage.check()
@@ -59,7 +57,7 @@ public class HomeWorkPageObjTests extends BasicTest {
 
         dropdownPage.check()
             .pageTitleIsVisible()
-            .pageTitleIsVisible("Dropdown List")
+            .validateTitleText("Dropdown List")
             .page()
 
             .selectOption(1)
@@ -74,4 +72,23 @@ public class HomeWorkPageObjTests extends BasicTest {
             .optionIsSelected("Option 2");
 
     }
+
+    @RepeatedTest(value = 10, name = "Запуск {currentRepetition} из {totalRepetitions}")
+    @DisplayName("Disappearing Elements")
+    @Description("""
+        Перейти на страницу Disappearing Elements. Добиться отображения 5 элементов, максимум за 10 попыток, если нет, провалить тест с ошибкой.
+        Для каждого обновления страницы проверять наличие 5 элементов. Использовать @RepeatedTest""")
+    public void disappearingElementsTest() {
+        Configuration.timeout = 500;
+        internetMainPage.clickDisappearingElementsButton();
+        DisappearingElementsPage disappearingElementsPage = new DisappearingElementsPage();
+
+        disappearingElementsPage.check()
+            .pageTitleIsVisible()
+            .validateTitleText("Disappearing Elements")
+            .descriptionIsVisible()
+            .validateDescriptionText("This example demonstrates when elements on a page change by disappearing/reappearing on each page load.")
+            .allElementsAreVisible();
+    }
+
 }

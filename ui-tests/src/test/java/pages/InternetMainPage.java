@@ -9,8 +9,8 @@ import io.qameta.allure.Step;
 public class InternetMainPage {
 
     SelenideElement checkboxesButton = $x("//a[@href='/checkboxes']");
-    //SelenideElement checkboxesNewButton = $(getBuilder().div().dataTest().equal("checkbox").build());
     SelenideElement dropdownButton = $x("//a[@href='/dropdown']");
+    SelenideElement disappearingElementsButton = $x("//a[@href='/disappearing_elements']");
     SelenideElement inputsButton = $x("//a[@href='/inputs']");
 
     public InternetMainPageAssert check() {
@@ -32,6 +32,12 @@ public class InternetMainPage {
     @Step("Нажать на кнопку 'Inputs'")
     public InternetMainPage clickInputsButton() {
         inputsButton.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    @Step("Нажать на кнопку 'Disappearing Elements'")
+    public InternetMainPage clickDisappearingElementsButton() {
+        disappearingElementsButton.shouldBe(Condition.visible).click();
         return this;
     }
 }
