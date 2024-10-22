@@ -36,8 +36,24 @@ public class AuthService extends BasicApi {
     }
 
     public static void verifyLoginResponse(Response response) {
-        String token = response.then().extract().jsonPath().getString("access_token");
+        token = getAuthToken(response);
         steps.verifyStatusCode(response, 200);
         steps.verifyToken(response, token);
+    }
+
+    public static String getAuthToken(Response response) {
+        return token = response.then().extract().jsonPath().getString("access_token");
+    }
+
+    public static String authenticateUser(DTOUserRequest user) {
+        Response loginResponse = AuthService.loginUser(user);
+        steps.verifyStatusCode(loginResponse, 200);
+        return getAuthToken(loginResponse);
+    }
+
+    @Step("Создать нового пользователя, зарегистрировать и авторизовать его")
+    public static String createAndAuthenticateNewUser() {
+        DTOUserRequest user = createAndRegisterNewUser();
+        return authenticateUser(user);
     }
 }

@@ -3,7 +3,6 @@ package tests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.APIConfig;
-import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
@@ -13,6 +12,7 @@ import java.util.Random;
 import listner.CustomTpl;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.BeforeAll;
+import services.AuthService;
 import utils.RestApiBuilder;
 
 public class BasicApi {
@@ -33,7 +33,7 @@ public class BasicApi {
                     .withCustomTemplates());
         }
 
-        token = getAuthToken();
+        token = AuthService.createAndAuthenticateNewUser();
         random  = new Random();
     }
 
@@ -63,6 +63,12 @@ public class BasicApi {
     public static RequestSpecification getBuilder() {
         return new RestApiBuilder(config.baseURI())
             .addAuth(token)
+            .build().accept("application/json");
+    }
+
+    public static RequestSpecification getBuilder(String access_token) {
+        return new RestApiBuilder(config.baseURI())
+            .addAuth(access_token)
             .build().accept("application/json");
     }
 

@@ -1,5 +1,6 @@
 package dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DTOCartItem {
 
     private int id;
@@ -16,6 +18,6 @@ public class DTOCartItem {
     private String category;
     private double price;
     private double discount;
-    //!private int quantity;
+    private int quantity; // в свагере нет этого поля
 
 }

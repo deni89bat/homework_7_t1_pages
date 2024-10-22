@@ -2,22 +2,18 @@ package tests;
 
 
 import dto.request.DTOUserRequest;
-import dto.response.DTOProductResponse;
-import dto.response.DTOProductsList;
 import dto.response.DTOUserCartResponse;
-import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
-import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.AuthService;
+import services.CartService;
 import services.ProductsService;
 
 public class ApiTests extends BasicApi {
 
     TestSteps steps = new TestSteps();
-    ProductsApi productsApi = new ProductsApi(token);
-    CartApi cartApi = new CartApi(token);
 
     //User registration and login tests
     @Test
@@ -107,18 +103,49 @@ public class ApiTests extends BasicApi {
     @Test
     @DisplayName("[ GET /cart ] Get the user's shopping cart")
     void getUserCart() {
-        Response response = cartApi.getUserCart();
-        DTOUserCartResponse cart = response.as(new TypeRef<DTOUserCartResponse>() {
-        });
-        System.out.println("Получили дтошку " + cart.toString());
-        steps.verifyStatusCode(response, 200);
+        AuthService.createAndAuthenticateNewUser();
+
+        CartService.getEmptyUserCart(token);
+
+        CartService.addProductToCart(token, 1, 1);
+
+        DTOUserCartResponse cart = CartService.getNotEmptyCart(token);
+        CartService.verifyCart(cart);
     }
 
     @Test
     @DisplayName("[ POST /cart ] Add a product to the user's shopping cart")
     void addProductToCart() {
-        Response response = cartApi.addProductToCart(4, 2);
-        steps.verifyStatusCode(response, 201);
+        int productId = 6;
+        int quantity = 2;
+        AuthService.createAndAuthenticateNewUser();
+
+        CartService.getEmptyUserCart(token);
+
+        CartService.addProductToCart(token, productId, quantity);
+
+        DTOUserCartResponse cart = CartService.getNotEmptyCart(token);
+        CartService.verifyAddedProductInCart(cart, productId, quantity);
+    }
+
+    @Test
+    @DisplayName("[ DELETE /cart/{product_id} ] Remove a product from the user's shopping cart")
+    void deleteProductToCart() {
+        int productId = 7;
+        int quantity = 5;
+        AuthService.createAndAuthenticateNewUser();
+
+        CartService.getEmptyUserCart(token);
+
+        CartService.addProductToCart(token, productId, quantity);
+
+        CartService.deleteProductFromCart(token, productId);
+
+        DTOUserCartResponse cart = CartService.getNotEmptyCart(token);
+        int quantityAfterDelete = cart.getCart().get(0).getQuantity();
+
+        Assertions.assertThat(quantityAfterDelete).isEqualTo(quantity - 1);
+
     }
 
 
