@@ -1,14 +1,19 @@
 package tests;
 
+import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.sleep;
 import static io.qameta.allure.Allure.addAttachment;
 
+import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import pages.CheckboxesPage;
+import pages.DropdownPage;
 
 public class HomeWorkPageObjTests extends BasicTest {
 
@@ -41,5 +46,27 @@ public class HomeWorkPageObjTests extends BasicTest {
             .verifyCheckboxesByOrder(order)
             .printCheckedAttribute(1)
             .printCheckedAttribute(2);
+    }
+
+    @Test
+    @DisplayName("Dropdown")
+    @Description("""
+        Перейти на страницу Dropdown. Выбрать первую опцию, вывести в консоль текущий текст элемента dropdown, выбрать вторую опцию, вывести в консоль текущий текст элемента dropdown.
+        Проверять корректное состояние каждого dropDown после каждого нажатия на него.""")
+    public void dropdownTest() {
+        internetMainPage.clickDropdownButton();
+        DropdownPage dropdownPage = new DropdownPage();
+
+        dropdownPage.selectOption(1)
+            .logSelectedOption()
+            .check()
+            .optionIsSelected("Option 1")
+            .page()
+
+            .selectOption(2)
+            .logSelectedOption()
+            .check()
+            .optionIsSelected("Option 2");
+
     }
 }
