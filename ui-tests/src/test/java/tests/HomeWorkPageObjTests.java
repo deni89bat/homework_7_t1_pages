@@ -1,9 +1,6 @@
 package tests;
 
-import static com.codeborne.selenide.Selenide.$x;
-
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.junit5.ScreenShooterExtension;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -29,7 +26,6 @@ public class HomeWorkPageObjTests extends BasicTest {
     @RegisterExtension
     static ScreenShooterExtension screenshotEmAll = new ScreenShooterExtension(true).to(
         "target/screenshots");
-    TestSteps steps = new TestSteps();
 
     @ParameterizedTest
     @ValueSource(strings = {"ascOrder", "descOrder"})
