@@ -10,14 +10,26 @@ public class InputsPage {
 
     public SelenideElement pageTitle = $x("//h3");
     public SelenideElement inputField = $x("//input[@type='number']");
+    public SelenideElement nameInputField = $x("//div/p");
 
     public InputsPageAssert check() {
         return InputsPageAssert.assertThat(this);
     }
 
+    @Step("Проверить, что страница 'Inputs' отображается корректно")
+    public InputsPage pageIsPresent() {
+        check().pageTitleIsVisible()
+            .validateTitleText("Inputs")
+            .inputFieldIsVisible()
+            .nameInputFieldIsVisible()
+            .validateNameInputFieldText("Number");
+        return this;
+    }
+
     @Step("Очищаем поле ввода")
     public InputsPage clearInputField() {
         inputField.clear();
+        check().inputFieldIsEmpty();
         return this;
     }
 
@@ -26,9 +38,11 @@ public class InputsPage {
             "Проверить, что в поле ввода отображается именно то число, которое было введено.")
     public InputsPage enterRandomNumberInInput() {
         int randomNumber = (int) (Math.random() * 10000) + 1;
-        inputField.sendKeys(String.valueOf(randomNumber));
+        enterValue(String.valueOf(randomNumber))
+            .check()
+            .validateInputValue(String.valueOf(randomNumber));
         System.out.println("Значение элемента Input: " + inputField.getValue());
-        inputField.shouldBe(Condition.value(String.valueOf(randomNumber)));
+
         return this;
     }
 

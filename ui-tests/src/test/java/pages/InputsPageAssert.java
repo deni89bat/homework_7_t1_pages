@@ -14,13 +14,19 @@ public class InputsPageAssert extends AbstractAssert<InputsPageAssert, InputsPag
         return new InputsPageAssert(actual);
     }
 
-    @Step("Проверить, что заголовок страницы 'Inputs' отображается")
+    @Step("Пользователь видит, что заголовок страницы 'Inputs' отображается")
     public InputsPageAssert pageTitleIsVisible() {
         actual.pageTitle.shouldBe(Condition.visible);
         return this;
     }
 
-    @Step("Проверить, что поле ввода отображается")
+    @Step("Проверить, что заголовок содержит текст '{expectedText}'")
+    public InputsPageAssert validateTitleText(String expectedText) {
+        actual.pageTitle.shouldHave(Condition.text(expectedText));
+        return this;
+    }
+
+    @Step("Пользователь видит, что поле ввода отображается")
     public InputsPageAssert inputFieldIsVisible() {
         actual.inputField.shouldBe(Condition.visible);
         return this;
@@ -32,9 +38,27 @@ public class InputsPageAssert extends AbstractAssert<InputsPageAssert, InputsPag
         return this;
     }
 
+    @Step("Пользователь видит, что название поля ввода отображается")
+    public InputsPageAssert nameInputFieldIsVisible() {
+        actual.nameInputField.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Пользователь видит, что название поля ввода {expectedText}")
+    public InputsPageAssert validateNameInputFieldText(String expectedText) {
+        actual.nameInputField.shouldHave(Condition.text(expectedText));
+        return this;
+    }
+
+
     @Step("Проверить, что поле ввода очищено")
     public InputsPageAssert inputFieldIsEmpty() {
         actual.inputField.shouldHave(Condition.empty);
         return this;
     }
+
+    public InputsPage page() {
+        return actual;
+    }
 }
+

@@ -126,10 +126,11 @@ public class HomeWorkPageObjTests extends BasicTest {
                 "Тест №" + iteration + ": Ввести любое случайное число от 1 до 10 000.",
                 () -> {
                     if (iteration == 1) {
-                        internetMainPage.clickInputsButton();  // Кликаем на ссылку только в первом тесте
+                        internetMainPage.clickInputsButton(); // Кликаем на ссылку только в первом тесте
+                        inputsPage.pageIsPresent(); // страница отобразилась со всеми элементами
                     }
-                    inputsPage.clearInputField() // Очищаем поле перед каждым вводом
-                        .enterRandomNumberInInput();  // Вводим случайное число
+                    inputsPage.clearInputField()
+                        .enterRandomNumberInInput();
                 }));
         }
 
