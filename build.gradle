@@ -30,6 +30,7 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
         testImplementation "io.qameta.allure:allure-junit5:${allureJunit5Version}"
         testImplementation "org.assertj:assertj-core:${assertjVersion}"
+        testImplementation "org.aeonbits.owner:owner:${ownerVersion}"
         testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
         testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
         compileOnly "org.projectlombok:lombok:${lombokVersion}"

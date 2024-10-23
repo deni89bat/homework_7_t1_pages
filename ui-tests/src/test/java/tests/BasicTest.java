@@ -13,14 +13,18 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import pages.InternetMainPage;
+import utils.UIProps;
 
 public class BasicTest {
 
     protected InternetMainPage internetMainPage = new InternetMainPage();
+
+    UIProps props = ConfigFactory.create(UIProps.class);
 
     @BeforeAll
     public static void setUp() {
@@ -34,7 +38,7 @@ public class BasicTest {
     @BeforeEach
     @Step("Открыть страницу 'https://the-internet.herokuapp.com/'")
     void openMainPage() {
-        open("https://the-internet.herokuapp.com/");
+        open(props.baseURL());
     }
 
     // Метод для добавления скриншота в отчет Allure
