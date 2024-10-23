@@ -1,11 +1,5 @@
 # Домашняя работа 7 к лекции 8 AT Frameworks и Patterns
 
-## Описание задания
-
-Все практические задания выполняются на открытом
-стенде [the-internet.herokuapp.com](https://the-internet.herokuapp.com/).
-
-### Задания:
 
 ## Запуск тестов
 
