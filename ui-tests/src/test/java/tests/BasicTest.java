@@ -31,7 +31,7 @@ public class BasicTest {
         Configuration.browser = "chrome";
         Configuration.pageLoadStrategy = "eager";
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
-            .screenshots(true)  // Записывать скриншоты
+            .screenshots(true)
             .savePageSource(true));
     }
 
