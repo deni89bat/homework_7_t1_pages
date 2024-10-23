@@ -19,4 +19,16 @@
     ./gradlew allureReport 
 3. Просмотрите отчет Allure в веб-браузере:
    ```bash
-   ./gradlew allureServe 
+   ./gradlew allureServe
+4. Запустите тесты из модуля `api-tests`:
+    ```bash
+    ./gradlew :api-tests:test --tests "tests.ApiTests"
+5. Сгенерируйте отчет Allure:
+   ```bash
+    ./gradlew allureReport 
+6. Просмотрите отчет Allure в веб-браузере:
+   ```bash
+   ./gradlew allureServe
+
+
+ 
